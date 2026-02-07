@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 Days of Python - Day 1: Introduction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3776ab 0%, #ffd43b 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .emoji {
+            font-size: 3em;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .author {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .author a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        h2 {
+            color: #3776ab;
+            font-size: 2em;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #ffd43b;
+        }
+
+        h3 {
+            color: #3776ab;
+            font-size: 1.5em;
+            margin: 25px 0 10px 0;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 1.2em;
+            margin: 20px 0 10px 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        strong {
+            color: #3776ab;
+            font-weight: 600;
+        }
+
+        em {
+            font-style: italic;
+            color: #764ba2;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #e74c3c;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border-left: 4px solid #ffd43b;
+        }
+
+        pre code {
+            background: none;
+            color: #f8f8f2;
+            padding: 0;
+        }
+
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        a {
+            color: #3776ab;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        a:hover {
+            border-bottom-color: #3776ab;
+        }
+
+        .exercises {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 5px solid #3776ab;
+        }
+
+        .exercises h2 {
+            border-bottom: none;
+            margin-top: 0;
+        }
+
+        .exercises h3 {
+            color: #764ba2;
+        }
+
+        .congrats {
+            text-align: center;
+            font-size: 1.5em;
+            padding: 30px;
+            background: linear-gradient(135deg, #3776ab 0%, #764ba2 100%);
+            color: white;
+            margin-top: 40px;
+            border-radius: 8px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #3776ab;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffd43b;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="emoji">🐍</span>
+            <h1>30 Days Of Python</h1>
+            <h2>Day 1 - Introduction</h2>
+            <div class="author">
+                <p>Author: <a href="https://www.linkedin.com/in/smk99" target="_blank">Konam Shivamani</a></p>
+                <small>First Edition: February 2026</small>
+            </div>
+        </div>
+
+        <div class="content">
+            <h2>📘 Welcome</h2>
+            <p><strong>Congratulations</strong> for deciding to participate in a <em>30 days of Python</em> programming challenge. In this challenge you will learn everything you need to be a python programmer and the whole concept of programming. In the end of the challenge you will get a <em>30DaysOfPython</em> programming challenge certificate.</p>
+
+            <h2>Introduction</h2>
+            <p>Python is a high-level programming language for general-purpose programming. It is an open source, interpreted, objected-oriented programming language. Python was created by a Dutch programmer, Guido van Rossum. The name of Python programming language was derived from a British sketch comedy series, <em>Monty Python's Flying Circus</em>. The first version was released on February 20, 1991.</p>
+            
+            <p>This 30 days of Python challenge will help you learn the latest version of Python, Python 3 step by step. The topics are broken down into 30 days, where each day contains several topics with easy-to-understand explanations, real-world examples, many hands on exercises and projects.</p>
+
+            <p>This challenge is designed for beginners and professionals who want to learn python programming language. It may take 30 to 100 days to complete the challenge. If you are a visual learner, you may get started with this <a href="https://www.youtube.com/watch?v=11OYpBrhdyM" target="_blank">Python for Absolute Beginners video</a>.</p>
+
+            <h2>Why Python?</h2>
+            <p>It is a programming language which is very close to human language and because of that it is easy to learn and use. Python is used by various industries and companies (including Google). It has been used to develop web applications, desktop applications, system administration, and machine learning libraries. Python is highly embraced in the data science and machine learning community.</p>
+
+            <div class="highlight">
+                <strong>💡 Fun Fact:</strong> Python is eating the world and you are learning it before it eats you!
+            </div>
+
+            <h2>Environment Setup</h2>
+
+            <h3>Installing Python</h3>
+            <p>To run a python script you need to install python. Visit <a href="https://www.python.org/" target="_blank">python.org</a> and download the appropriate version for your operating system (Windows, macOS, or Linux).</p>
+
+            <p>To check if python is installed, write the following command on your device terminal:</p>
+            <pre><code>python --version</code></pre>
+
+            <p>Your version of Python might be different but it should be 3.6 or above. If you can see the python version, well done! Python has been installed on your machine.</p>
+
+            <h3>Python Shell</h3>
+            <p>Python is an interpreted scripting language, so it does not need to be compiled. It means it executes the code line by line. Python comes with a <em>Python Shell (Python Interactive Shell)</em>. It is used to execute a single python command and get the result.</p>
+
+            <p>Open your terminal or command prompt and write:</p>
+            <pre><code>python</code></pre>
+
+            <p>The Python interactive shell is opened and waiting for you to write Python code. You will write your Python script next to this symbol <code>>>></code> and then press Enter.</p>
+
+            <p>To close the shell, write <strong>exit()</strong> command and press Enter.</p>
+
+            <h3>Python Errors and Debugging</h3>
+            <p>Python will give you results if you write scripts that Python understands, if not it returns errors. Using <code>x</code> as multiplication in Python is a syntax error because (x) is not a valid syntax in Python. Instead of <strong>x</strong> we use asterisk (<code>*</code>) for multiplication.</p>
+
+            <p>The process of identifying and removing errors from a program is called <em>debugging</em>. Some of the Python errors you may encounter are:</p>
+            <ul>
+                <li><code>SyntaxError</code></li>
+                <li><code>IndexError</code></li>
+                <li><code>NameError</code></li>
+                <li><code>ModuleNotFoundError</code></li>
+                <li><code>KeyError</code></li>
+                <li><code>TypeError</code></li>
+                <li><code>ValueError</code></li>
+                <li><code>ZeroDivisionError</code></li>
+            </ul>
+
+            <h3>Basic Mathematical Operations</h3>
+            <p>Let us do some basic maths in Python:</p>
+            <ul>
+                <li>2 + 3 = 5 (addition)</li>
+                <li>3 - 2 = 1 (subtraction)</li>
+                <li>3 * 2 = 6 (multiplication)</li>
+                <li>3 / 2 = 1.5 (division)</li>
+                <li>3 ** 2 = 9 (exponential)</li>
+                <li>3 % 2 = 1 (modulus - remainder)</li>
+                <li>3 // 2 = 1 (floor division - removes remainder)</li>
+            </ul>
+
+            <h3>Comments</h3>
+            <p>Comments are very important to make the code more readable. Python does not run comment parts of our code. A comment in python starts with hash (<code>#</code>) symbol.</p>
+
+            <p><strong>Single Line Comment:</strong></p>
+            <pre><code># This is a comment
+# Python is eating the world</code></pre>
+
+            <p><strong>Multiline Comment:</strong></p>
+            <pre><code>"""This is multiline comment
+multiline comment takes multiple lines.
+python is eating the world
+"""</code></pre>
+
+            <h2>Data Types</h2>
+            <p>In Python there are several types of data types. Let us get started with the most common ones:</p>
+
+            <h3>Number</h3>
+            <ul>
+                <li><strong>Integer:</strong> Negative, zero and positive numbers<br>
+                    Example: -3, -2, -1, 0, 1, 2, 3</li>
+                <li><strong>Float:</strong> Decimal numbers<br>
+                    Example: -3.5, -2.25, -1.0, 0.0, 1.1, 2.2, 3.5</li>
+                <li><strong>Complex:</strong> Example: 1 + j, 2 + 4j</li>
+            </ul>
+
+            <h3>String</h3>
+            <p>A collection of one or more characters under a single or double quote. If a string is more than one sentence then we use a triple quote.</p>
+            <pre><code>'Shivamani'
+'Hyderabad'
+'Python'
+'I love teaching'
+'I hope you are enjoying the first day of 30DaysOfPython Challenge'</code></pre>
+
+            <h3>Booleans</h3>
+            <p>A boolean data type is either a True or False value. T and F should be always uppercase.</p>
+            <pre><code>True  #  Is the light on? If it is on, then the value is True
+False # Is the light on? If it is off, then the value is False</code></pre>
+
+            <h3>List</h3>
+            <p>Python list is an ordered collection which allows to store different data type items. A list is similar to an array in JavaScript.</p>
+            <pre><code>[0, 1, 2, 3, 4, 5]  # all are the same data types
+['Banana', 'Orange', 'Mango', 'Avocado'] # list of strings
+['Finland','Estonia', 'Sweden','Norway'] # list of countries
+['Banana', 10, False, 9.81] # mixed data types</code></pre>
+
+            <h3>Dictionary</h3>
+            <p>A Python dictionary object is an unordered collection of data in a key value pair format.</p>
+            <pre><code>{
+    'first_name':'Shivamani',
+    'last_name':'Konam',
+    'country':'India', 
+    'age':250, 
+    'is_married':True,
+    'skills':['JS', 'React', 'Node', 'Python']
+}</code></pre>
+
+            <h3>Tuple</h3>
+            <p>A tuple is an ordered collection of different data types like list but tuples can not be modified once they are created. They are immutable.</p>
+            <pre><code>('Shiva', 'Sai', 'Aishu', 'Ravi', 'Naga') # Names
+('Earth', 'Jupiter', 'Neptune', 'Mars', 'Venus', 'Saturn') # Planets</code></pre>
+
+            <h3>Set</h3>
+            <p>A set is a collection of data types similar to list and tuple. Unlike list and tuple, set is not an ordered collection of items. Like in Mathematics, set in Python stores only unique items.</p>
+            <pre><code>{2, 4, 3, 5}
+{3.14, 9.81, 2.7} # order is not important in set</code></pre>
+
+            <h3>Checking Data Types</h3>
+            <p>To check the data type of certain data/variable we use the <strong>type</strong> function.</p>
+
+            <h2>Python File</h2>
+            <p>First create a folder called 30DaysOfPython. Inside this folder, create a file called helloworld.py.</p>
+
+            <p>The Python interactive shell was printing without using <strong>print</strong> but in a file we should use the built-in function <code>print()</code>.</p>
+
+            <p><strong>Example (helloworld.py):</strong></p>
+            <pre><code># Day 1 - 30DaysOfPython Challenge
+
+print(2 + 3)             # addition(+)
+print(3 - 1)             # subtraction(-)
+print(2 * 3)             # multiplication(*)
+print(3 / 2)             # division(/)
+print(3 ** 2)            # exponential(**)
+print(3 % 2)             # modulus(%)
+print(3 // 2)            # Floor division operator(//)
+
+# Checking data types
+print(type(10))          # Int
+print(type(3.14))        # Float
+print(type(1 + 3j))      # Complex number
+print(type('Asabeneh'))  # String
+print(type([1, 2, 3]))   # List
+print(type({'name':'Asabeneh'})) # Dictionary
+print(type({9.8, 3.14, 2.7}))    # Set
+print(type((9.8, 3.14, 2.7)))    # Tuple</code></pre>
+
+            <p>To run the python file, type in the terminal:</p>
+            <pre><code>python helloworld.py</code></pre>
+
+            <div class="exercises">
+                <h2>💻 Exercises - Day 1</h2>
+
+                <h3>Exercise: Level 1</h3>
+                <ol>
+                    <li>Check the python version you are using</li>
+                    <li>Open the python interactive shell and do the following operations with operands 3 and 4:
+                        <ul>
+                            <li>addition (+)</li>
+                            <li>subtraction (-)</li>
+                            <li>multiplication (*)</li>
+                            <li>modulus (%)</li>
+                            <li>division (/)</li>
+                            <li>exponential (**)</li>
+                            <li>floor division operator (//)</li>
+                        </ul>
+                    </li>
+                    <li>Write strings on the python interactive shell:
+                        <ul>
+                            <li>Your name</li>
+                            <li>Your family name</li>
+                            <li>Your country</li>
+                            <li>I am enjoying 30 days of python</li>
+                        </ul>
+                    </li>
+                    <li>Check the data types of:
+                        <ul>
+                            <li>10</li>
+                            <li>9.8</li>
+                            <li>3.14</li>
+                            <li>4 - 4j</li>
+                            <li>['Asabeneh', 'Python', 'Finland']</li>
+                            <li>Your name</li>
+                            <li>Your family name</li>
+                            <li>Your country</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>Exercise: Level 2</h3>
+                <ol>
+                    <li>Create a folder named day_1 inside 30DaysOfPython folder. Inside day_1 folder, create a python file helloworld.py and repeat questions 1, 2, 3 and 4. Remember to use <code>print()</code> when working in a python file.</li>
+                </ol>
+
+                <h3>Exercise: Level 3</h3>
+                <ol>
+                    <li>Write an example for different Python data types such as Number (Integer, Float, Complex), String, Boolean, List, Tuple, Set and Dictionary.</li>
+                    <li>Find an <a href="https://en.wikipedia.org/wiki/Euclidean_distance" target="_blank">Euclidean distance</a> between (2, 3) and (10, 8)</li>
+                </ol>
+            </div>
+
+            <div class="congrats">
+                🎉 CONGRATULATIONS! 🎉
+                <p style="margin-top: 10px; font-size: 0.9em;">You are amazing! You have just completed day 1 challenge and you are on your way to greatness.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
