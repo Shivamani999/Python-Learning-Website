@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>30 Days of Python - Day 1: Introduction</title>
+    <title>Day 1: Introduction to Python | 30 Days of Python</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
         * {
             margin: 0;
@@ -11,447 +12,955 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-blue: #3776ab;
+            --primary-yellow: #ffd43b;
+            --success-green: #4CAF50;
+            --error-red: #f44336;
+            --dark-bg: #1e1e1e;
+            --light-bg: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #666;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            color: var(--text-dark);
+            background: #fff;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #3776ab 0%, #ffd43b 100%);
+        /* Header Navigation */
+        .top-nav {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #2c5d87 100%);
             color: white;
-            padding: 40px;
-            text-align: center;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .header .emoji {
-            font-size: 3em;
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        .author {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        .author a {
-            color: white;
-            text-decoration: none;
+        .nav-title {
+            font-size: 1.5rem;
             font-weight: bold;
         }
 
-        .content {
-            padding: 40px;
+        .nav-title .day-number {
+            background: var(--primary-yellow);
+            color: var(--primary-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .streak-counter {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .streak-counter .fire {
+            font-size: 1.5rem;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 500px;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 3rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .author-info {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .author-info a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 2px solid var(--primary-yellow);
         }
 
         h2 {
-            color: #3776ab;
-            font-size: 2em;
-            margin: 30px 0 15px 0;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #ffd43b;
+            color: var(--primary-blue);
+            font-size: 2rem;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-yellow);
         }
 
         h3 {
-            color: #3776ab;
-            font-size: 1.5em;
-            margin: 25px 0 10px 0;
-        }
-
-        h4 {
-            color: #555;
-            font-size: 1.2em;
-            margin: 20px 0 10px 0;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin: 1.5rem 0 0.8rem 0;
         }
 
         p {
-            margin-bottom: 15px;
-            color: #555;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            line-height: 1.8;
         }
 
-        strong {
-            color: #3776ab;
-            font-weight: 600;
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+            color: var(--text-light);
         }
 
-        em {
-            font-style: italic;
-            color: #764ba2;
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid var(--primary-yellow);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        /* Code Blocks with Syntax Highlighting */
+        pre {
+            background: #2d2d2d !important;
+            border-radius: 8px;
+            padding: 1.5rem !important;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary-yellow);
+        }
+
+        pre code {
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            font-size: 0.95rem;
         }
 
         code {
             background: #f4f4f4;
-            padding: 2px 6px;
+            padding: 0.2rem 0.4rem;
             border-radius: 3px;
-            font-family: 'Courier New', monospace;
             color: #e74c3c;
-            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
         }
 
-        pre {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 20px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 20px 0;
-            border-left: 4px solid #ffd43b;
+        /* Executor Sidebar */
+        .executor-sidebar {
+            background: var(--light-bg);
+            border-left: 2px solid #ddd;
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
         }
 
-        pre code {
-            background: none;
-            color: #f8f8f2;
-            padding: 0;
-        }
-
-        ul, ol {
-            margin: 15px 0 15px 30px;
-        }
-
-        li {
-            margin-bottom: 8px;
-            color: #555;
-        }
-
-        a {
-            color: #3776ab;
-            text-decoration: none;
-            border-bottom: 2px solid transparent;
-            transition: border-color 0.3s;
-        }
-
-        a:hover {
-            border-bottom-color: #3776ab;
-        }
-
-        .exercises {
-            background: #f9f9f9;
-            padding: 30px;
-            border-radius: 8px;
-            margin: 30px 0;
-            border-left: 5px solid #3776ab;
-        }
-
-        .exercises h2 {
-            border-bottom: none;
-            margin-top: 0;
-        }
-
-        .exercises h3 {
-            color: #764ba2;
-        }
-
-        .congrats {
-            text-align: center;
-            font-size: 1.5em;
-            padding: 30px;
-            background: linear-gradient(135deg, #3776ab 0%, #764ba2 100%);
-            color: white;
-            margin-top: 40px;
-            border-radius: 8px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            margin: 20px 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background: #3776ab;
-            color: white;
+        .executor-title {
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
             font-weight: bold;
         }
 
-        tr:nth-child(even) {
-            background: #f9f9f9;
+        .code-editor {
+            width: 100%;
+            min-height: 200px;
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            font-size: 14px;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: var(--dark-bg);
+            color: #f8f8f2;
+            resize: vertical;
+            margin-bottom: 1rem;
         }
 
-        .highlight {
+        .code-editor:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .executor-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-run {
+            background: var(--success-green);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-run:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-clear {
+            background: var(--error-red);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-clear:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        }
+
+        .output-container {
+            background: var(--dark-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #00ff00;
+            white-space: pre-wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .output-container.error {
+            color: #ff6b6b;
+        }
+
+        /* Exercise Section */
+        .exercise-section {
+            background: white;
+            border: 2px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-title {
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .exercise-status {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .exercise-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .exercise-status.pending {
             background: #fff3cd;
-            padding: 15px;
-            border-left: 4px solid #ffd43b;
-            margin: 20px 0;
-            border-radius: 4px;
+            color: #856404;
+        }
+
+        .verify-btn {
+            background: var(--primary-blue);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .verify-btn:hover {
+            background: #2c5d87;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(55, 118, 171, 0.3);
+        }
+
+        .feedback-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .feedback-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        /* Navigation Buttons */
+        .day-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 2px solid #eee;
+        }
+
+        .nav-btn {
+            padding: 1rem 2rem;
+            border: 2px solid var(--primary-blue);
+            background: white;
+            color: var(--primary-blue);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(55, 118, 171, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.next {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .nav-btn.next:hover {
+            background: #2c5d87;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            border: none;
+            margin-bottom: 1rem;
+        }
+
+        .modal-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-yellow));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .executor-sidebar {
+                border-left: none;
+                border-top: 2px solid #ddd;
+                max-height: none;
+            }
+
+            .content-area {
+                max-height: none;
+            }
         }
 
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
+            .content-area {
+                padding: 1.5rem;
             }
 
-            .content {
-                padding: 20px;
+            .hero-section h1 {
+                font-size: 2rem;
             }
 
-            h2 {
-                font-size: 1.5em;
+            .top-nav {
+                flex-direction: column;
+                gap: 1rem;
             }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <span class="emoji">🐍</span>
-            <h1>30 Days Of Python</h1>
-            <h2>Day 1 - Introduction</h2>
-            <div class="author">
-                <p>Author: <a href="https://www.linkedin.com/in/smk99" target="_blank">Konam Shivamani</a></p>
-                <small>First Edition: February 2026</small>
-            </div>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="nav-title">
+            🐍 30 Days of Python
+            <span class="day-number">Day 1/30</span>
         </div>
+        <div class="streak-counter">
+            <span class="fire">🔥</span>
+            <span id="streak-count">0</span> Day Streak
+        </div>
+    </div>
 
-        <div class="content">
-            <h2>📘 Welcome</h2>
-            <p><strong>Congratulations</strong> for deciding to participate in a <em>30 days of Python</em> programming challenge. In this challenge you will learn everything you need to be a python programmer and the whole concept of programming. In the end of the challenge you will get a <em>30DaysOfPython</em> programming challenge certificate.</p>
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="hero-section">
+                <h1>Day 1: Introduction to Python</h1>
+                <p class="subtitle">Welcome to your Python learning journey!</p>
+                <div class="author-info">
+                    <p>Author: <a href="https://www.linkedin.com/in/smk99" target="_blank">Konam Shivamani</a></p>
+                    <small>First Edition: February 2026</small>
+                </div>
+            </div>
 
-            <h2>Introduction</h2>
-            <p>Python is a high-level programming language for general-purpose programming. It is an open source, interpreted, objected-oriented programming language. Python was created by a Dutch programmer, Guido van Rossum. The name of Python programming language was derived from a British sketch comedy series, <em>Monty Python's Flying Circus</em>. The first version was released on February 20, 1991.</p>
-            
-            <p>This 30 days of Python challenge will help you learn the latest version of Python, Python 3 step by step. The topics are broken down into 30 days, where each day contains several topics with easy-to-understand explanations, real-world examples, many hands on exercises and projects.</p>
+            <!-- Progress -->
+            <div>
+                <h3>Your Progress Today</h3>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+                <p id="progress-text">0 of 5 exercises completed</p>
+            </div>
 
-            <p>This challenge is designed for beginners and professionals who want to learn python programming language. It may take 30 to 100 days to complete the challenge. If you are a visual learner, you may get started with this <a href="https://www.youtube.com/watch?v=11OYpBrhdyM" target="_blank">Python for Absolute Beginners video</a>.</p>
+            <h2>📘 Introduction</h2>
+            <p><strong>Welcome to 30 Days Of Python programming challenge!</strong> In this challenge, you will learn everything you need to be a Python programmer and the whole concept of programming. At the end of the challenge, you will get a certificate of completion.</p>
 
             <h2>Why Python?</h2>
-            <p>It is a programming language which is very close to human language and because of that it is easy to learn and use. Python is used by various industries and companies (including Google). It has been used to develop web applications, desktop applications, system administration, and machine learning libraries. Python is highly embraced in the data science and machine learning community.</p>
+            <p>It is a programming language which is very close to human language and because of that it is easy to learn and use. Python is used by various industries and companies (including Google). It has been used to develop web applications, desktop applications, system administration, and machine learning libraries.</p>
 
-            <div class="highlight">
+            <div class="highlight-box">
                 <strong>💡 Fun Fact:</strong> Python is eating the world and you are learning it before it eats you!
             </div>
 
-            <h2>Environment Setup</h2>
+            <h2>Basic Mathematical Operations</h2>
+            <p>Python can perform various mathematical operations:</p>
 
-            <h3>Installing Python</h3>
-            <p>To run a python script you need to install python. Visit <a href="https://www.python.org/" target="_blank">python.org</a> and download the appropriate version for your operating system (Windows, macOS, or Linux).</p>
+            <pre><code class="language-python"># Addition
+print(2 + 3)      # Output: 5
 
-            <p>To check if python is installed, write the following command on your device terminal:</p>
-            <pre><code>python --version</code></pre>
+# Subtraction
+print(3 - 2)      # Output: 1
 
-            <p>Your version of Python might be different but it should be 3.6 or above. If you can see the python version, well done! Python has been installed on your machine.</p>
+# Multiplication
+print(3 * 2)      # Output: 6
 
-            <h3>Python Shell</h3>
-            <p>Python is an interpreted scripting language, so it does not need to be compiled. It means it executes the code line by line. Python comes with a <em>Python Shell (Python Interactive Shell)</em>. It is used to execute a single python command and get the result.</p>
+# Division
+print(3 / 2)      # Output: 1.5
 
-            <p>Open your terminal or command prompt and write:</p>
-            <pre><code>python</code></pre>
+# Exponential
+print(3 ** 2)     # Output: 9
 
-            <p>The Python interactive shell is opened and waiting for you to write Python code. You will write your Python script next to this symbol <code>>>></code> and then press Enter.</p>
+# Modulus (Remainder)
+print(3 % 2)      # Output: 1
 
-            <p>To close the shell, write <strong>exit()</strong> command and press Enter.</p>
+# Floor Division
+print(3 // 2)     # Output: 1</code></pre>
 
-            <h3>Python Errors and Debugging</h3>
-            <p>Python will give you results if you write scripts that Python understands, if not it returns errors. Using <code>x</code> as multiplication in Python is a syntax error because (x) is not a valid syntax in Python. Instead of <strong>x</strong> we use asterisk (<code>*</code>) for multiplication.</p>
+            <h2>Comments in Python</h2>
+            <p>Comments help make code more readable. Python ignores comments during execution.</p>
 
-            <p>The process of identifying and removing errors from a program is called <em>debugging</em>. Some of the Python errors you may encounter are:</p>
-            <ul>
-                <li><code>SyntaxError</code></li>
-                <li><code>IndexError</code></li>
-                <li><code>NameError</code></li>
-                <li><code>ModuleNotFoundError</code></li>
-                <li><code>KeyError</code></li>
-                <li><code>TypeError</code></li>
-                <li><code>ValueError</code></li>
-                <li><code>ZeroDivisionError</code></li>
-            </ul>
+            <pre><code class="language-python"># This is a single line comment
 
-            <h3>Basic Mathematical Operations</h3>
-            <p>Let us do some basic maths in Python:</p>
-            <ul>
-                <li>2 + 3 = 5 (addition)</li>
-                <li>3 - 2 = 1 (subtraction)</li>
-                <li>3 * 2 = 6 (multiplication)</li>
-                <li>3 / 2 = 1.5 (division)</li>
-                <li>3 ** 2 = 9 (exponential)</li>
-                <li>3 % 2 = 1 (modulus - remainder)</li>
-                <li>3 // 2 = 1 (floor division - removes remainder)</li>
-            </ul>
+"""
+This is a multiline comment.
+It can span multiple lines.
+Python is amazing!
+"""
 
-            <h3>Comments</h3>
-            <p>Comments are very important to make the code more readable. Python does not run comment parts of our code. A comment in python starts with hash (<code>#</code>) symbol.</p>
-
-            <p><strong>Single Line Comment:</strong></p>
-            <pre><code># This is a comment
-# Python is eating the world</code></pre>
-
-            <p><strong>Multiline Comment:</strong></p>
-            <pre><code>"""This is multiline comment
-multiline comment takes multiple lines.
-python is eating the world
-"""</code></pre>
+print("Hello, World!")  # This prints a message</code></pre>
 
             <h2>Data Types</h2>
-            <p>In Python there are several types of data types. Let us get started with the most common ones:</p>
+            <p>Python has several built-in data types:</p>
 
-            <h3>Number</h3>
-            <ul>
-                <li><strong>Integer:</strong> Negative, zero and positive numbers<br>
-                    Example: -3, -2, -1, 0, 1, 2, 3</li>
-                <li><strong>Float:</strong> Decimal numbers<br>
-                    Example: -3.5, -2.25, -1.0, 0.0, 1.1, 2.2, 3.5</li>
-                <li><strong>Complex:</strong> Example: 1 + j, 2 + 4j</li>
-            </ul>
+            <pre><code class="language-python"># Numbers
+integer_num = 42          # Integer
+float_num = 3.14          # Float
+complex_num = 1 + 3j      # Complex
 
-            <h3>String</h3>
-            <p>A collection of one or more characters under a single or double quote. If a string is more than one sentence then we use a triple quote.</p>
-            <pre><code>'Shivamani'
-'Hyderabad'
-'Python'
-'I love teaching'
-'I hope you are enjoying the first day of 30DaysOfPython Challenge'</code></pre>
+# String
+name = "Python"
 
-            <h3>Booleans</h3>
-            <p>A boolean data type is either a True or False value. T and F should be always uppercase.</p>
-            <pre><code>True  #  Is the light on? If it is on, then the value is True
-False # Is the light on? If it is off, then the value is False</code></pre>
+# Boolean
+is_fun = True
+is_difficult = False
 
-            <h3>List</h3>
-            <p>Python list is an ordered collection which allows to store different data type items. A list is similar to an array in JavaScript.</p>
-            <pre><code>[0, 1, 2, 3, 4, 5]  # all are the same data types
-['Banana', 'Orange', 'Mango', 'Avocado'] # list of strings
-['Finland','Estonia', 'Sweden','Norway'] # list of countries
-['Banana', 10, False, 9.81] # mixed data types</code></pre>
+# List (ordered, mutable)
+fruits = ['apple', 'banana', 'orange']
 
-            <h3>Dictionary</h3>
-            <p>A Python dictionary object is an unordered collection of data in a key value pair format.</p>
-            <pre><code>{
-    'first_name':'Shivamani',
-    'last_name':'Konam',
-    'country':'India', 
-    'age':250, 
-    'is_married':True,
-    'skills':['JS', 'React', 'Node', 'Python']
-}</code></pre>
+# Tuple (ordered, immutable)
+coordinates = (10, 20)
 
-            <h3>Tuple</h3>
-            <p>A tuple is an ordered collection of different data types like list but tuples can not be modified once they are created. They are immutable.</p>
-            <pre><code>('Shiva', 'Sai', 'Aishu', 'Ravi', 'Naga') # Names
-('Earth', 'Jupiter', 'Neptune', 'Mars', 'Venus', 'Saturn') # Planets</code></pre>
+# Dictionary (key-value pairs)
+person = {
+    'name': 'Shivamani',
+    'age': 25,
+    'city': 'Hyderabad'
+}
 
-            <h3>Set</h3>
-            <p>A set is a collection of data types similar to list and tuple. Unlike list and tuple, set is not an ordered collection of items. Like in Mathematics, set in Python stores only unique items.</p>
-            <pre><code>{2, 4, 3, 5}
-{3.14, 9.81, 2.7} # order is not important in set</code></pre>
+# Set (unordered, unique items)
+unique_numbers = {1, 2, 3, 4, 5}
 
-            <h3>Checking Data Types</h3>
-            <p>To check the data type of certain data/variable we use the <strong>type</strong> function.</p>
+# Check types
+print(type(integer_num))   # <class 'int'>
+print(type(name))          # <class 'str'>
+print(type(fruits))        # <class 'list'></code></pre>
 
-            <h2>Python File</h2>
-            <p>First create a folder called 30DaysOfPython. Inside this folder, create a file called helloworld.py.</p>
+            <h2>💻 Exercises</h2>
 
-            <p>The Python interactive shell was printing without using <strong>print</strong> but in a file we should use the built-in function <code>print()</code>.</p>
-
-            <p><strong>Example (helloworld.py):</strong></p>
-            <pre><code># Day 1 - 30DaysOfPython Challenge
-
-print(2 + 3)             # addition(+)
-print(3 - 1)             # subtraction(-)
-print(2 * 3)             # multiplication(*)
-print(3 / 2)             # division(/)
-print(3 ** 2)            # exponential(**)
-print(3 % 2)             # modulus(%)
-print(3 // 2)            # Floor division operator(//)
-
-# Checking data types
-print(type(10))          # Int
-print(type(3.14))        # Float
-print(type(1 + 3j))      # Complex number
-print(type('Asabeneh'))  # String
-print(type([1, 2, 3]))   # List
-print(type({'name':'Asabeneh'})) # Dictionary
-print(type({9.8, 3.14, 2.7}))    # Set
-print(type((9.8, 3.14, 2.7)))    # Tuple</code></pre>
-
-            <p>To run the python file, type in the terminal:</p>
-            <pre><code>python helloworld.py</code></pre>
-
-            <div class="exercises">
-                <h2>💻 Exercises - Day 1</h2>
-
-                <h3>Exercise: Level 1</h3>
-                <ol>
-                    <li>Check the python version you are using</li>
-                    <li>Open the python interactive shell and do the following operations with operands 3 and 4:
-                        <ul>
-                            <li>addition (+)</li>
-                            <li>subtraction (-)</li>
-                            <li>multiplication (*)</li>
-                            <li>modulus (%)</li>
-                            <li>division (/)</li>
-                            <li>exponential (**)</li>
-                            <li>floor division operator (//)</li>
-                        </ul>
-                    </li>
-                    <li>Write strings on the python interactive shell:
-                        <ul>
-                            <li>Your name</li>
-                            <li>Your family name</li>
-                            <li>Your country</li>
-                            <li>I am enjoying 30 days of python</li>
-                        </ul>
-                    </li>
-                    <li>Check the data types of:
-                        <ul>
-                            <li>10</li>
-                            <li>9.8</li>
-                            <li>3.14</li>
-                            <li>4 - 4j</li>
-                            <li>['Asabeneh', 'Python', 'Finland']</li>
-                            <li>Your name</li>
-                            <li>Your family name</li>
-                            <li>Your country</li>
-                        </ul>
-                    </li>
-                </ol>
-
-                <h3>Exercise: Level 2</h3>
-                <ol>
-                    <li>Create a folder named day_1 inside 30DaysOfPython folder. Inside day_1 folder, create a python file helloworld.py and repeat questions 1, 2, 3 and 4. Remember to use <code>print()</code> when working in a python file.</li>
-                </ol>
-
-                <h3>Exercise: Level 3</h3>
-                <ol>
-                    <li>Write an example for different Python data types such as Number (Integer, Float, Complex), String, Boolean, List, Tuple, Set and Dictionary.</li>
-                    <li>Find an <a href="https://en.wikipedia.org/wiki/Euclidean_distance" target="_blank">Euclidean distance</a> between (2, 3) and (10, 8)</li>
-                </ol>
+            <!-- Exercise 1 -->
+            <div class="exercise-section" id="exercise-1">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 1: Basic Math Operations</div>
+                    <div class="exercise-status pending" id="status-1">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Write code to calculate and print the result of: (5 + 3) * 2</p>
+                <p><strong>Expected Output:</strong> 16</p>
+                <textarea class="code-editor" id="code-1" placeholder="Write your code here...">print((5 + 3) * 2)</textarea>
+                <button class="verify-btn" onclick="verifyExercise(1)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-1"></div>
             </div>
 
-            <div class="congrats">
-                🎉 CONGRATULATIONS! 🎉
-                <p style="margin-top: 10px; font-size: 0.9em;">You are amazing! You have just completed day 1 challenge and you are on your way to greatness.</p>
+            <!-- Exercise 2 -->
+            <div class="exercise-section" id="exercise-2">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 2: String Operations</div>
+                    <div class="exercise-status pending" id="status-2">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Create a variable with your name and print it</p>
+                <p><strong>Expected:</strong> Should print your name</p>
+                <textarea class="code-editor" id="code-2" placeholder="Write your code here...">name = "Your Name"
+print(name)</textarea>
+                <button class="verify-btn" onclick="verifyExercise(2)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-2"></div>
+            </div>
+
+            <!-- Exercise 3 -->
+            <div class="exercise-section" id="exercise-3">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 3: Type Checking</div>
+                    <div class="exercise-status pending" id="status-3">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Check and print the type of the number 3.14</p>
+                <p><strong>Expected Output:</strong> &lt;class 'float'&gt;</p>
+                <textarea class="code-editor" id="code-3" placeholder="Write your code here...">print(type(3.14))</textarea>
+                <button class="verify-btn" onclick="verifyExercise(3)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-3"></div>
+            </div>
+
+            <!-- Exercise 4 -->
+            <div class="exercise-section" id="exercise-4">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 4: List Creation</div>
+                    <div class="exercise-status pending" id="status-4">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Create a list with numbers 1, 2, 3, 4, 5 and print it</p>
+                <p><strong>Expected Output:</strong> [1, 2, 3, 4, 5]</p>
+                <textarea class="code-editor" id="code-4" placeholder="Write your code here...">numbers = [1, 2, 3, 4, 5]
+print(numbers)</textarea>
+                <button class="verify-btn" onclick="verifyExercise(4)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-4"></div>
+            </div>
+
+            <!-- Exercise 5 -->
+            <div class="exercise-section" id="exercise-5">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 5: Euclidean Distance</div>
+                    <div class="exercise-status pending" id="status-5">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Calculate the Euclidean distance between points (2, 3) and (10, 8)</p>
+                <p><strong>Formula:</strong> √[(x₂-x₁)² + (y₂-y₁)²]</p>
+                <p><strong>Expected Output:</strong> 9.433981132056603</p>
+                <textarea class="code-editor" id="code-5" placeholder="Write your code here...">x1, y1 = 2, 3
+x2, y2 = 10, 8
+distance = ((x2 - x1)**2 + (y2 - y1)**2) ** 0.5
+print(distance)</textarea>
+                <button class="verify-btn" onclick="verifyExercise(5)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-5"></div>
+            </div>
+
+            <!-- Day Navigation -->
+            <div class="day-navigation">
+                <button class="nav-btn prev" disabled>← Previous Day</button>
+                <button class="nav-btn next" onclick="goToNextDay()">Next Day →</button>
+            </div>
+        </div>
+
+        <!-- Executor Sidebar -->
+        <div class="executor-sidebar">
+            <div class="executor-title">🐍 Python Playground</div>
+            <p style="color: #666; margin-bottom: 1rem;">Test your Python code here!</p>
+            
+            <textarea class="code-editor" id="playground-code">print("Hello, Python!")
+print("Welcome to Day 1!")
+
+# Try your own code here
+x = 10
+y = 20
+print(f"Sum: {x + y}")</textarea>
+            
+            <div class="executor-buttons">
+                <button class="btn btn-run" onclick="runPlayground()">▶ Run</button>
+                <button class="btn btn-clear" onclick="clearPlayground()">🗑 Clear</button>
+            </div>
+            
+            <div class="output-container" id="playground-output">Click "Run" to execute code...</div>
+
+            <div class="info-box">
+                <strong>💡 Tip:</strong> Use the playground to experiment with Python code. Try the examples from the lessons!
             </div>
         </div>
     </div>
+
+    <!-- Completion Modal -->
+    <div class="modal" id="completion-modal">
+        <div class="modal-content">
+            <h2>⚠️ Complete Today's Exercises</h2>
+            <p>You need to complete all exercises before moving to the next day!</p>
+            <p><strong id="remaining-exercises"></strong></p>
+            <button class="modal-btn" onclick="closeModal()">Got it!</button>
+        </div>
+    </div>
+
+    <!-- Syntax Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+    <script>
+        // State Management
+        let completedExercises = new Set(JSON.parse(localStorage.getItem('day1-completed') || '[]'));
+        let streak = parseInt(localStorage.getItem('streak') || '0');
+
+        // Initialize
+        document.getElementById('streak-count').textContent = streak;
+        updateProgress();
+        checkCompletedExercises();
+
+        // Python Executor
+        function runPython(code) {
+            try {
+                let output = [];
+                
+                const context = {
+                    print: (...args) => {
+                        output.push(args.map(arg => {
+                            if (typeof arg === 'object') {
+                                return JSON.stringify(arg).replace(/"/g, "'");
+                            }
+                            return String(arg);
+                        }).join(' '));
+                    },
+                    type: (val) => {
+                        if (Array.isArray(val)) return "<class 'list'>";
+                        if (val === null) return "<class 'NoneType'>";
+                        if (typeof val === 'object' && !Array.isArray(val)) {
+                            return "<class 'dict'>";
+                        }
+                        if (typeof val === 'number') {
+                            return Number.isInteger(val) ? "<class 'int'>" : "<class 'float'>";
+                        }
+                        if (typeof val === 'string') return "<class 'str'>";
+                        if (typeof val === 'boolean') return "<class 'bool'>";
+                        return "<class 'object'>";
+                    },
+                    True: true,
+                    False: false,
+                    None: null
+                };
+                
+                let jsCode = code
+                    .split('\n')
+                    .map(line => {
+                        const commentIndex = line.indexOf('#');
+                        if (commentIndex !== -1) {
+                            const beforeComment = line.substring(0, commentIndex);
+                            const singleQuotes = (beforeComment.match(/'/g) || []).length;
+                            const doubleQuotes = (beforeComment.match(/"/g) || []).length;
+                            if (singleQuotes % 2 === 0 && doubleQuotes % 2 === 0) {
+                                return line.substring(0, commentIndex).trim();
+                            }
+                        }
+                        return line;
+                    })
+                    .join('\n')
+                    .replace(/"""[\s\S]*?"""/g, '')
+                    .replace(/'''[\s\S]*?'''/g, '')
+                    .replace(/\bTrue\b/g, 'true')
+                    .replace(/\bFalse\b/g, 'false')
+                    .replace(/print\((.*?)\)/g, 'context.print($1)')
+                    .replace(/type\((.*?)\)/g, 'context.type($1)')
+                    .replace(/(\d+)\s*\/\/\s*(\d+)/g, 'Math.floor($1/$2)');
+                
+                const func = new Function('context', jsCode);
+                func(context);
+                
+                return { success: true, output: output.join('\n') || '(No output)' };
+            } catch (error) {
+                return { success: false, output: 'Error: ' + error.message };
+            }
+        }
+
+        // Playground
+        function runPlayground() {
+            const code = document.getElementById('playground-code').value;
+            const outputEl = document.getElementById('playground-output');
+            
+            outputEl.textContent = 'Running...';
+            outputEl.className = 'output-container';
+            
+            setTimeout(() => {
+                const result = runPython(code);
+                outputEl.textContent = result.output;
+                if (!result.success) {
+                    outputEl.classList.add('error');
+                }
+            }, 100);
+        }
+
+        function clearPlayground() {
+            document.getElementById('playground-output').textContent = 'Output cleared. Run code to see results...';
+            document.getElementById('playground-output').className = 'output-container';
+        }
+
+        // Exercise Verification
+        const expectedOutputs = {
+            1: '16',
+            2: 'contains_print', // Special check
+            3: "<class 'float'>",
+            4: '[1, 2, 3, 4, 5]',
+            5: '9.433981132056603'
+        };
+
+        function verifyExercise(exerciseNum) {
+            const code = document.getElementById(`code-${exerciseNum}`).value;
+            const feedbackEl = document.getElementById(`feedback-${exerciseNum}`);
+            const statusEl = document.getElementById(`status-${exerciseNum}`);
+            
+            if (!code.trim()) {
+                feedbackEl.textContent = '❌ Please write some code first!';
+                feedbackEl.className = 'feedback-message error';
+                return;
+            }
+
+            const result = runPython(code);
+            const output = result.output.trim();
+            const expected = expectedOutputs[exerciseNum];
+            
+            let isCorrect = false;
+            
+            if (exerciseNum === 2) {
+                // For exercise 2, just check if it has print statement
+                isCorrect = code.includes('print') && output.length > 0;
+            } else {
+                isCorrect = output === expected;
+            }
+            
+            if (isCorrect) {
+                feedbackEl.textContent = '✅ Correct! Great job!';
+                feedbackEl.className = 'feedback-message success';
+                statusEl.textContent = 'Completed';
+                statusEl.className = 'exercise-status completed';
+                
+                if (!completedExercises.has(exerciseNum)) {
+                    completedExercises.add(exerciseNum);
+                    saveProgress();
+                    updateProgress();
+                    
+                    // Check if all exercises are done
+                    if (completedExercises.size === 5) {
+                        setTimeout(celebrateCompletion, 500);
+                    }
+                }
+            } else {
+                feedbackEl.textContent = `❌ Not quite right. Expected: ${expected}\nYour output: ${output}`;
+                feedbackEl.className = 'feedback-message error';
+            }
+        }
+
+        function updateProgress() {
+            const completed = completedExercises.size;
+            const total = 5;
+            const percentage = (completed / total) * 100;
+            
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `${completed} of ${total} exercises completed`;
+        }
+
+        function checkCompletedExercises() {
+            completedExercises.forEach(num => {
+                document.getElementById(`status-${num}`).textContent = 'Completed';
+                document.getElementById(`status-${num}`).className = 'exercise-status completed';
+            });
+        }
+
+        function saveProgress() {
+            localStorage.setItem('day1-completed', JSON.stringify([...completedExercises]));
+        }
+
+        function celebrateCompletion() {
+            // Update streak
+            if (!localStorage.getItem('day1-finished')) {
+                streak++;
+                localStorage.setItem('streak', streak);
+                localStorage.setItem('day1-finished', 'true');
+                document.getElementById('streak-count').textContent = streak;
+            }
+            
+            alert('🎉 Congratulations! You completed Day 1!\n\n' +
+                  'You\'re now ready for Day 2.\n' +
+                  `Current streak: ${streak} day${streak > 1 ? 's' : ''}!`);
+        }
+
+        function goToNextDay() {
+            if (completedExercises.size < 5) {
+                const remaining = 5 - completedExercises.size;
+                document.getElementById('remaining-exercises').textContent = 
+                    `You have ${remaining} exercise${remaining > 1 ? 's' : ''} left to complete.`;
+                document.getElementById('completion-modal').classList.add('show');
+            } else {
+                // Navigate to day 2
+                window.location.href = 'day-2.html';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('completion-modal').classList.remove('show');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                const activeElement = document.activeElement;
+                if (activeElement.id === 'playground-code') {
+                    runPlayground();
+                    e.preventDefault();
+                }
+            }
+        });
+
+        // Apply syntax highlighting to pre-existing code blocks
+        document.addEventListener('DOMContentLoaded', function() {
+            Prism.highlightAll();
+        });
+    </script>
 </body>
 </html>
