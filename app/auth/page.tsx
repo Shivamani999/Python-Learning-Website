@@ -69,23 +69,6 @@ export default function AuthPage() {
     }
   }
 
-  const handleGitHubSignIn = async () => {
-    try {
-      setLoading(true)
-      setError('')
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'github',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      })
-      if (error) throw error
-    } catch (error: any) {
-      setError(error.message)
-      setLoading(false)
-    }
-  }
-
   useEffect(() => {
     const saved = localStorage.getItem('rememberEmail')
     if (saved) setEmail(saved)
@@ -165,8 +148,7 @@ export default function AuthPage() {
           </div>
 
           <div className="flex gap-3">
-            <button type="button" onClick={handleGitHubSignIn} disabled={loading} className="flex-1 py-2 rounded-lg bg-white/10 text-white hover:bg-white/15 transition disabled:opacity-50 disabled:cursor-not-allowed">GitHub</button>
-            <button type="button" onClick={handleGoogleSignIn} disabled={loading} className="flex-1 py-2 rounded-lg bg-white/10 text-white hover:bg-white/15 transition disabled:opacity-50 disabled:cursor-not-allowed">Google</button>
+            <button type="button" onClick={handleGoogleSignIn} disabled={loading} className="w-full py-2 rounded-lg bg-white/10 text-white hover:bg-white/15 transition disabled:opacity-50 disabled:cursor-not-allowed">Google</button>
           </div>
         </form>
 
