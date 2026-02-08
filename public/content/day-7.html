@@ -1,105 +1,906 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>30 Days of Python - Day 7</title>
+    <title>Day 7: Sets | 30 Days of Python</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
+        /* Styles same as other days (kept consistent) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-blue: #3776ab;
+            --primary-yellow: #ffd43b;
+            --success-green: #4CAF50;
+            --error-red: #f44336;
+            --dark-bg: #1e1e1e;
+            --light-bg: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #666;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            color: var(--text-dark);
+            background: #fff;
+        }
+
+        .top-nav {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #2c5d87 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-title .day-number {
+            background: var(--primary-yellow);
+            color: var(--primary-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .streak-counter {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 500px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .content-area {
+            padding: 3rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .motivational-quote {
+            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 25%, #00BFFF 50%, #98FB98 75%, #FFB6C1 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+            line-height: 1.8;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .author-info {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            padding: 1.5rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .author-info p {
+            margin: 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .author-info a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-bottom: 3px solid var(--primary-yellow);
+            padding-bottom: 0.2rem;
+        }
+
+        .learning-objectives {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8eef7 100%);
+            border-left: 5px solid var(--primary-blue);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(55, 118, 171, 0.1);
+        }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .objective-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #2c5d87 100%);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        h2 {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-yellow);
+        }
+
+        pre {
+            background: #2d2d2d !important;
+            border-radius: 8px;
+            padding: 1.5rem !important;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary-yellow);
+        }
+
+        pre code {
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            font-size: 0.95rem;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            color: #e74c3c;
+            font-family: 'Courier New', monospace;
+        }
+
+        .executor-sidebar {
+            background: var(--light-bg);
+            border-left: 2px solid #ddd;
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 200px;
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            font-size: 14px;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: var(--dark-bg);
+            color: #f8f8f2;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .executor-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-run {
+            background: var(--success-green);
+            color: white;
+            flex: 1;
+        }
+
+        .output-container {
+            background: var(--dark-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #00ff00;
+            white-space: pre-wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .exercise-section {
+            background: white;
+            border: 2px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-title {
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .exercise-status {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .exercise-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .exercise-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .verify-btn {
+            background: var(--primary-blue);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .hint-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-right: 0.5rem;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .hint-text {
+            background: #e8d5f2;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+            color: #333;
+            display: none;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .hint-text.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .feedback-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .day-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 2px solid #eee;
+        }
+
+        .nav-btn {
+            padding: 1rem 2rem;
+            border: 2px solid var(--primary-blue);
+            background: white;
+            color: var(--primary-blue);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             align-items: center;
             justify-content: center;
         }
 
-        .container {
-            max-width: 800px;
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #3776ab 0%, #ffd43b 100%);
-            color: white;
-            padding: 60px 40px;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
             text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .emoji {
-            font-size: 5em;
-            display: block;
-            margin-bottom: 20px;
+        .progress-container {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 10px;
+            margin: 1rem 0;
         }
 
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-yellow));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s;
         }
 
-        h2 {
-            font-size: 1.5em;
-            font-weight: 400;
+        @media (max-width:1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .executor-sidebar {
+                border-left: none;
+                border-top: 2px solid #ddd;
+                max-height: none;
+            }
+
+            .content-area {
+                max-height: none;
+            }
         }
 
-        .content {
-            padding: 60px 40px;
-            text-align: center;
-        }
+        @media (max-width:768px) {
+            .content-area {
+                padding: 1.5rem;
+            }
 
-        .coming-soon {
-            font-size: 2em;
-            color: #3776ab;
-            margin-bottom: 20px;
-        }
+            .hero-section h1 {
+                font-size: 2rem;
+            }
 
-        p {
-            color: #666;
-            font-size: 1.1em;
-            line-height: 1.8;
-            margin-bottom: 30px;
-        }
-
-        .back-btn {
-            display: inline-block;
-            background: #3776ab;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-
-        .back-btn:hover {
-            background: #2d5f8d;
+            .top-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <span class="emoji">🐍</span>
-            <h1>30 Days Of Python</h1>
-            <h2>Day 7 - Coming Soon</h2>
+    <div class="top-nav">
+        <div class="nav-title">🐍 30 Days of Python <span class="day-number">Day 7/30</span></div>
+        <div class="streak-counter"><span class="fire">🔥</span> <span id="streak-count">0</span> Day Streak</div>
+    </div>
+
+    <div class="main-container">
+        <div class="content-area">
+            <div class="hero-section">
+                <h1>Day 7: Sets</h1>
+                <div class="motivational-quote">✨ "You are a rising star . You have just completed day 7 challenges and
+                    you are 7 steps ahead in to your way to greatness." ✨</div>
+                <div class="author-info">
+                    <p><span class="author-label">👨‍🏫 Learn from:</span> <a href="https://www.linkedin.com/in/smk99"
+                            target="_blank" title="Visit LinkedIn Profile"><span class="linkedin-icon">in</span> Konam
+                            Shivamani</a></p>
+                </div>
+            </div>
+
+            <div class="learning-objectives">
+                <h3>📚 What You'll Learn Today</h3>
+                <div class="objectives-grid">
+                    <div class="objective-item"><span class="objective-icon">✓</span><span>What sets are and their
+                            properties</span></div>
+                    <div class="objective-item"><span class="objective-icon">✓</span><span>Creating and accessing
+                            sets</span></div>
+                    <div class="objective-item"><span class="objective-icon">✓</span><span>Set operations: union,
+                            intersection, difference</span></div>
+                    <div class="objective-item"><span class="objective-icon">✓</span><span>Converting lists to sets
+                            (removing duplicates)</span></div>
+                    <div class="objective-item"><span class="objective-icon">✓</span><span>Subset, superset and disjoint
+                            checks</span></div>
+                    <div class="objective-item"><span class="objective-icon">✓</span><span>Adding and removing set
+                            items</span></div>
+                </div>
+            </div>
+
+            <div>
+                <h3>Your Progress Today</h3>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+                </div>
+                <p id="progress-text">0 of 5 exercises completed</p>
+            </div>
+
+            <h2>Sets</h2>
+
+            <p>Set is a collection of items. Let me take you back to your elementary or high school Mathematics lesson.
+                The Mathematics definition of a set can be applied also in Python. Set is a collection of unordered and
+                un-indexed distinct elements. In Python set is used to store unique items, and it is possible to find
+                the <em>union</em>, <em>intersection</em>, <em>difference</em>, <em>symmetric difference</em>,
+                <em>subset</em>, <em>super set</em> and <em>disjoint set</em> among sets.</p>
+
+            <h3>Creating a Set</h3>
+            <p>We use curly brackets, {} to create a set or the <code>set()</code> built-in function.</p>
+            <h4>Creating an empty set</h4>
+            <pre><code class="language-python"># syntax
+st = {}
+# or
+st = set()</code></pre>
+
+            <h4>Creating a set with initial items</h4>
+            <pre><code class="language-python"># syntax
+st = {'item1', 'item2', 'item3', 'item4'}</code></pre>
+
+            <p><strong>Example:</strong></p>
+            <pre><code class="language-python"># syntax
+fruits = {'banana', 'orange', 'mango', 'lemon'}</code></pre>
+
+            <h3>Getting Set's Length</h3>
+            <p>We use <strong>len()</strong> method to find the length of a set.</p>
+            <pre><code class="language-python"># syntax
+st = {'item1', 'item2', 'item3', 'item4'}
+len(set)</code></pre>
+
+            <p><strong>Example:</strong></p>
+            <pre><code class="language-python">fruits = {'banana', 'orange', 'mango', 'lemon'}
+len(fruits)</code></pre>
+
+            <h3>Accessing Items in a Set</h3>
+            <p>We use loops to access items. We will see this in loop section</p>
+
+            <h3>Checking an Item</h3>
+            <p>To check if an item exist in a list we use <em>in</em> membership operator.</p>
+            <pre><code class="language-python"># syntax
+st = {'item1', 'item2', 'item3', 'item4'}
+print("Does set st contain item3? ", 'item3' in st) # Does set st contain item3? True</code></pre>
+
+            <p><strong>Example:</strong></p>
+            <pre><code class="language-python">fruits = {'banana', 'orange', 'mango', 'lemon'}
+print('mango' in fruits ) # True</code></pre>
+
+            <h3>Adding Items to a Set</h3>
+            <p>Once a set is created we cannot change any items and we can also add additional items.</p>
+            <h4>Add one item using <code>add()</code></h4>
+            <pre><code class="language-python"># syntax
+st = {'item1', 'item2', 'item3', 'item4'}
+st.add('item5')</code></pre>
+
+            <p><strong>Example:</strong></p>
+            <pre><code class="language-python">fruits = {'banana', 'orange', 'mango', 'lemon'}
+fruits.add('lime')</code></pre>
+
+            <h4>Add multiple items using <code>update()</code></h4>
+            <p>The <em>update()</em> allows to add multiple items to a set. The <em>update()</em> takes a list argument.
+            </p>
+            <pre><code class="language-python"># syntax
+st = {'item1', 'item2', 'item3', 'item4'}
+st.update(['item5','item6','item7'])</code></pre>
+
+            <p><strong>Example:</strong></p>
+            <pre><code class="language-python">fruits = {'banana', 'orange', 'mango', 'lemon'}
+vegetables = ('tomato', 'potato', 'cabbage','onion', 'carrot')
+fruits.update(vegetables)</code></pre>
+
+            <h3>Removing Items from a Set</h3>
+            <p>We can remove an item from a set using <em>remove()</em> method. If the item is not found
+                <em>remove()</em> method will raise errors, so it is good to check if the item exist in the given set.
+                However, <em>discard()</em> method doesn't raise any errors.</p>
+            <pre><code class="language-python"># syntax
+st = {'item1', 'item2', 'item3', 'item4'}
+st.remove('item2')</code></pre>
+
+            <p>The <code>pop()</code> methods remove a random item from a list and it returns the removed item.</p>
+            <pre><code class="language-python">fruits = {'banana', 'orange', 'mango', 'lemon'}
+fruits.pop()  # removes a random item from the set
+
+# If we are interested in the removed item.
+fruits = {'banana', 'orange', 'mango', 'lemon'}
+removed_item = fruits.pop()</code></pre>
+
+            <h3>Clearing Items in a Set</h3>
+            <pre><code class="language-python"># syntax
+st = {'item1', 'item2', 'item3', 'item4'}
+st.clear()</code></pre>
+            <pre><code class="language-python">fruits = {'banana', 'orange', 'mango', 'lemon'}
+fruits.clear()
+print(fruits) # set()</code></pre>
+
+            <h3>Deleting a Set</h3>
+            <pre><code class="language-python"># syntax
+st = {'item1', 'item2', 'item3', 'item4'}
+del st</code></pre>
+            <pre><code class="language-python">fruits = {'banana', 'orange', 'mango', 'lemon'}
+del fruits</code></pre>
+
+            <h3>Converting List to Set</h3>
+            <p>We can convert list to set and set to list. Converting list to set removes duplicates and only unique
+                items will be reserved.</p>
+            <pre><code class="language-python"># syntax
+lst = ['item1', 'item2', 'item3', 'item4', 'item1']
+st = set(lst)  # {'item2', 'item4', 'item1', 'item3'} - the order is random, because sets in general are unordered</code></pre>
+            <pre><code class="language-python">fruits = ['banana', 'orange', 'mango', 'lemon','orange', 'banana']
+fruits = set(fruits) # {'mango', 'lemon', 'banana', 'orange'}</code></pre>
+
+            <h3>Joining Sets</h3>
+            <p>We can join two sets using the <em>union()</em> or <em>update()</em> method.</p>
+            <h4>Union</h4>
+            <pre><code class="language-python"># syntax
+st1 = {'item1', 'item2', 'item3', 'item4'}
+st2 = {'item5', 'item6', 'item7', 'item8'}
+st3 = st1.union(st2)</code></pre>
+            <pre><code class="language-python">fruits = {'banana', 'orange', 'mango', 'lemon'}
+vegetables = {'tomato', 'potato', 'cabbage','onion', 'carrot'}
+print(fruits.union(vegetables)) # {'lemon', 'carrot', 'tomato', 'banana', 'mango', 'orange', 'cabbage', 'potato', 'onion'}</code></pre>
+
+            <h4>Update</h4>
+            <pre><code class="language-python"># syntax
+st1 = {'item1', 'item2', 'item3', 'item4'}
+st2 = {'item5', 'item6', 'item7', 'item8'}
+st1.update(st2) # st2 contents are added to st1</code></pre>
+            <pre><code class="language-python">fruits = {'banana', 'orange', 'mango', 'lemon'}
+vegetables = {'tomato', 'potato', 'cabbage','onion', 'carrot'}
+fruits.update(vegetables)
+print(fruits) # {'lemon', 'carrot', 'tomato', 'banana', 'mango', 'orange', 'cabbage', 'potato', 'onion'}</code></pre>
+
+            <h3>Finding Intersection Items</h3>
+            <pre><code class="language-python"># syntax
+st1 = {'item1', 'item2', 'item3', 'item4'}
+st2 = {'item3', 'item2'}
+st1.intersection(st2) # {'item3', 'item2'}</code></pre>
+            <pre><code class="language-python">whole_numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+even_numbers = {0, 2, 4, 6, 8, 10}
+whole_numbers.intersection(even_numbers) # {0, 2, 4, 6, 8, 10}
+
+python = {'p', 'y', 't', 'h', 'o','n'}
+dragon = {'d', 'r', 'a', 'g', 'o','n'}
+python.intersection(dragon)     # {'o', 'n'}</code></pre>
+
+            <h3>Checking Subset and Super Set</h3>
+            <pre><code class="language-python"># syntax
+st1 = {'item1', 'item2', 'item3', 'item4'}
+st2 = {'item2', 'item3'}
+st2.issubset(st1) # True
+st1.issuperset(st2) # True</code></pre>
+            <pre><code class="language-python">whole_numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+even_numbers = {0, 2, 4, 6, 8, 10}
+whole_numbers.issubset(even_numbers) # False, because it is a super set
+whole_numbers.issuperset(even_numbers) # True
+
+python = {'p', 'y', 't', 'h', 'o','n'}
+dragon = {'d', 'r', 'a', 'g', 'o','n'}
+python.issubset(dragon)     # False</code></pre>
+
+            <h3>Checking the Difference Between Two Sets</h3>
+            <pre><code class="language-python"># syntax
+st1 = {'item1', 'item2', 'item3', 'item4'}
+st2 = {'item2', 'item3'}
+st2.difference(st1) # set()
+st1.difference(st2) # {'item1', 'item4'} => st1\st2</code></pre>
+            <pre><code class="language-python">whole_numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+even_numbers = {0, 2, 4, 6, 8, 10}
+whole_numbers.difference(even_numbers) # {1, 3, 5, 7, 9}
+
+python = {'p', 'y', 't', 'o','n'}
+dragon = {'d', 'r', 'a', 'g', 'o','n'}
+python.difference(dragon)     # {'p', 'y', 't'}
+dragon.difference(python)     # {'d', 'r', 'a', 'g'}</code></pre>
+
+            <h3>Finding Symmetric Difference Between Two Sets</h3>
+            <pre><code class="language-python"># syntax
+st1 = {'item1', 'item2', 'item3', 'item4'}
+st2 = {'item2', 'item3'}
+# it means (A\B)∪(B\A)
+st2.symmetric_difference(st1) # {'item1', 'item4'}</code></pre>
+            <pre><code class="language-python">whole_numbers = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+some_numbers = {1, 2, 3, 4, 5}
+whole_numbers.symmetric_difference(some_numbers) # {0, 6, 7, 8, 9, 10}
+
+python = {'p', 'y', 't', 'h', 'o','n'}
+dragon = {'d', 'r', 'a', 'g', 'o','n'}
+python.symmetric_difference(dragon)  # {'r', 't', 'p', 'y', 'g', 'a', 'd', 'h'}</code></pre>
+
+            <h3>Joining Sets (Disjoint Check)</h3>
+            <pre><code class="language-python"># syntax
+st1 = {'item1', 'item2', 'item3', 'item4'}
+st2 = {'item2', 'item3'}
+st2.isdisjoint(st1) # False</code></pre>
+            <pre><code class="language-python">even_numbers = {0, 2, 4 ,6, 8}
+even_numbers = {1, 3, 5, 7, 9}
+even_numbers.isdisjoint(odd_numbers) # True, because no common item
+
+python = {'p', 'y', 't', 'h', 'o','n'}
+dragon = {'d', 'r', 'a', 'g', 'o','n'}
+python.isdisjoint(dragon)  # False, there are common items {'o', 'n'}</code></pre>
+
+            <div class="highlight-box">🌕 You are a rising star . You have just completed day 7 challenges and you are 7
+                steps ahead in to your way to greatness. Now do some exercises for your brain and muscles.</div>
+
+            <h2>💻 Exercises: Day 7</h2>
+
+            <pre><code class="language-python"># sets
+it_companies = {'Facebook', 'Google', 'Microsoft', 'Apple', 'IBM', 'Oracle', 'Amazon'}
+A = {19, 22, 24, 20, 25, 26}
+B = {19, 22, 20, 25, 26, 24, 28, 27}
+age = [22, 19, 24, 25, 26, 24, 25, 24]</code></pre>
+
+            <h3>Exercises: Level 1</h3>
+
+            <!-- Exercise 1 -->
+            <div class="exercise-section" id="exercise-1">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 1: Length of it_companies</div>
+                    <div class="exercise-status pending" id="status-1">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Find the length of the set <code>it_companies</code> and print it</p>
+                <p><strong>Expected Output:</strong> 7</p>
+                <textarea class="code-editor" id="code-1" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(1)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-1">Use <code>len(it_companies)</code> to get the length and print it.
+                </div>
+                <button class="verify-btn" onclick="verifyExercise(1)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-1"></div>
+            </div>
+
+            <!-- Exercise 2 -->
+            <div class="exercise-section" id="exercise-2">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 2: Add Twitter</div>
+                    <div class="exercise-status pending" id="status-2">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Add 'Twitter' to <code>it_companies</code> and print the set</p>
+                <p><strong>Expected Output:</strong> Set containing 'Twitter'</p>
+                <textarea class="code-editor" id="code-2" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(2)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-2">Use <code>it_companies.add('Twitter')</code> then print it.</div>
+                <button class="verify-btn" onclick="verifyExercise(2)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-2"></div>
+            </div>
+
+            <!-- Exercise 3 -->
+            <div class="exercise-section" id="exercise-3">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 3: Insert multiple companies</div>
+                    <div class="exercise-status pending" id="status-3">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Insert multiple IT companies at once to the set <code>it_companies</code> (you
+                    can choose any names) and print it</p>
+                <p><strong>Expected Output:</strong> Set containing the newly added companies</p>
+                <textarea class="code-editor" id="code-3" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(3)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-3">Use <code>it_companies.update(['Company1','Company2'])</code> then
+                    print it.</div>
+                <button class="verify-btn" onclick="verifyExercise(3)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-3"></div>
+            </div>
+
+            <!-- Exercise 4 -->
+            <div class="exercise-section" id="exercise-4">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 4: Remove a company</div>
+                    <div class="exercise-status pending" id="status-4">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Remove one of the companies from <code>it_companies</code> and print the set
+                </p>
+                <p><strong>Expected Output:</strong> Set without the removed company</p>
+                <textarea class="code-editor" id="code-4" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(4)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-4">Use <code>it_companies.remove('Company')</code> or
+                    <code>it_companies.discard('Company')</code>.</div>
+                <button class="verify-btn" onclick="verifyExercise(4)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-4"></div>
+            </div>
+
+            <!-- Exercise 5 -->
+            <div class="exercise-section" id="exercise-5">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 5: Explain remove vs discard</div>
+                    <div class="exercise-status pending" id="status-5">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Print a short explanation (1-2 lines) of the difference between
+                    <code>remove()</code> and <code>discard()</code></p>
+                <p><strong>Expected Output:</strong> Explanation mentioning that <code>remove</code> raises an error
+                    when missing while <code>discard</code> does not</p>
+                <textarea class="code-editor" id="code-5" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(5)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-5">Example: print("remove raises error if item missing; discard does
+                    not")</div>
+                <button class="verify-btn" onclick="verifyExercise(5)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-5"></div>
+            </div>
+
+            <div class="day-navigation">
+                <button class="nav-btn prev" onclick="goToPreviousDay()">← Previous Day</button>
+                <button class="nav-btn next" onclick="goToNextDay()">Next Day →</button>
+            </div>
         </div>
-        <div class="content">
-            <div class="coming-soon">📝 Content Coming Soon</div>
-            <p>This day's content is being prepared. Check back later for the complete lesson, examples, and exercises.</p>
-            <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+
+        <div class="executor-sidebar">
+            <div class="executor-title">🐍 Python Playground</div>
+            <p style="color:#666; margin-bottom:1rem;">Test your set code here!</p>
+            <textarea class="code-editor" id="playground-code"># Try your own code here..
+            </textarea>
+            <div class="executor-buttons">
+                <button class="btn btn-run" onclick="runPlayground()">▶ Run</button>
+                <button class="btn btn-clear" onclick="clearPlayground()">🗑 Clear</button>
+            </div>
+            <div class="output-container" id="playground-output">Click "Run" to execute code...</div>
+            <div class="info-box"><strong>💡 Tip:</strong> Sets are unordered — printed order may vary.</div>
         </div>
     </div>
+
+    <div class="modal" id="completion-modal">
+        <div class="modal-content">
+            <h2>⚠️ Complete Today's Exercises</h2>
+            <p>You need to complete all exercises before moving to the next day!</p>
+            <p><strong id="remaining-exercises"></strong></p><button class="modal-btn" onclick="closeModal()">Got
+                it!</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script>
+        let completedExercises = new Set(JSON.parse(localStorage.getItem('day7-completed') || '[]'));
+        let streak = parseInt(localStorage.getItem('streak') || '0');
+        document.getElementById('streak-count').textContent = streak;
+        updateProgress();
+        checkCompletedExercises();
+        document.querySelectorAll('.btn-run, .verify-btn').forEach(b => b.disabled = true);
+
+        document.addEventListener('DOMContentLoaded', function () { loadPyodideRuntime().catch(err => { console.error('Failed to load Pyodide:', err); document.getElementById('playground-output').textContent = 'Failed to load Python interpreter — using fallback.'; }); });
+
+        let pyodide = null; let pyodideReady = false;
+        async function loadPyodideRuntime() { if (!window.loadPyodide) { const s = document.createElement('script'); s.src = "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"; document.head.appendChild(s); await new Promise(resolve => s.onload = resolve); } pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.23.4/full/' }); pyodideReady = true; document.querySelectorAll('.btn-run, .verify-btn').forEach(b => b.disabled = false); document.getElementById('playground-output').textContent = 'Python interpreter ready — click Run'; }
+
+        function runPythonFallback(code) { try { let output = []; const context = { print: (...args) => { output.push(args.map(arg => { try { return JSON.stringify(arg); } catch (e) { return String(arg); } }).join(' ')); }, True: true, False: false, None: null, len: (obj) => obj.length || Object.keys(obj).length }; let jsCode = code.split('\n').map(line => { const ci = line.indexOf('#'); if (ci !== -1) { const before = line.substring(0, ci); const sq = (before.match(/'/g) || []).length; const dq = (before.match(/"/g) || []).length; if (sq % 2 === 0 && dq % 2 === 0) return line.substring(0, ci).trim(); } return line; }).join('\n').replace(/print\((.*?)\)/g, 'context.print($1)'); const func = new Function('context', jsCode); func(context); return { success: true, output: output.join('\n') || '(No output)' } } catch (error) { return { success: false, output: 'Error: ' + error.message }; } }
+
+        async function runPython(code) { if (pyodideReady && pyodide) { try { const wrapper = `import sys, io\n_io = io.StringIO()\nold = sys.stdout\nsys.stdout = _io\ntry:\n` + code.split('\n').map(l => '    ' + l).join('\n') + `\nfinally:\n    sys.stdout = old\n_output = _io.getvalue()`; await pyodide.runPythonAsync(wrapper); const out = pyodide.globals.get('_output'); const outStr = out === undefined || out === null ? '(No output)' : String(out); return { success: true, output: outStr.trim() || '(No output)' }; } catch (err) { return { success: false, output: 'Error: ' + (err.message || err) }; } } else { return runPythonFallback(code); } }
+
+        async function runPlayground() { const code = document.getElementById('playground-code').value; const outputEl = document.getElementById('playground-output'); outputEl.textContent = 'Running...'; outputEl.className = 'output-container'; const result = await runPython(code); outputEl.textContent = result.output; if (!result.success) outputEl.classList.add('error'); }
+        function clearPlayground() { document.getElementById('playground-output').textContent = 'Output cleared. Run code to see results...'; document.getElementById('playground-output').className = 'output-container'; }
+        function toggleHint(ex) { const hintEl = document.getElementById(`hint-${ex}`); const btnEl = event.target; hintEl.classList.toggle('show'); btnEl.textContent = hintEl.classList.contains('show') ? '💡 Hide Hint' : '💡 Get Hint'; }
+
+        async function verifyExercise(ex) {
+            const code = document.getElementById(`code-${ex}`).value; const feedbackEl = document.getElementById(`feedback-${ex}`); const statusEl = document.getElementById(`status-${ex}`); if (!code.trim()) { feedbackEl.textContent = '❌ Please write some code first!'; feedbackEl.className = 'feedback-message error'; return; } const result = await runPython(code); const output = (result.output || '').trim(); let isCorrect = false; if (ex === 1) { isCorrect = result.success && /\b7\b/.test(output); } else if (ex === 2) { isCorrect = result.success && /Twitter/.test(output); } else if (ex === 3) { isCorrect = result.success && /\{.*\}/.test(output) && (output.length > 4); } else if (ex === 4) { isCorrect = result.success && !/CompanyToRemove/.test(output); /* loose check: user provided set without removed company */ } else if (ex === 5) { isCorrect = result.success && (/remove/.test(output.toLowerCase()) || /discard/.test(output.toLowerCase()) || /error/.test(output.toLowerCase())); }
+
+            if (isCorrect) { feedbackEl.textContent = '✅ Correct! Great job!'; feedbackEl.className = 'feedback-message success'; statusEl.textContent = 'Completed'; statusEl.className = 'exercise-status completed'; if (!completedExercises.has(ex)) { completedExercises.add(ex); saveProgress(); updateProgress(); if (completedExercises.size === 5) { setTimeout(celebrateCompletion, 500); } } } else { feedbackEl.textContent = `❌ Not quite right. Your output: ${output}`; feedbackEl.className = 'feedback-message error'; }
+        }
+
+        function updateProgress() { const completed = completedExercises.size; const total = 5; const percentage = (completed / total) * 100; document.getElementById('progress-bar').style.width = percentage + '%'; document.getElementById('progress-text').textContent = `${completed} of ${total} exercises completed`; }
+        function checkCompletedExercises() { completedExercises.forEach(num => { const s = document.getElementById(`status-${num}`); if (s) { s.textContent = 'Completed'; s.className = 'exercise-status completed'; } }); }
+        function saveProgress() { localStorage.setItem('day7-completed', JSON.stringify([...completedExercises])); }
+        function celebrateCompletion() { if (!localStorage.getItem('day7-finished')) { streak++; localStorage.setItem('streak', streak); localStorage.setItem('day7-finished', 'true'); document.getElementById('streak-count').textContent = streak; } alert('🎉 Congratulations! You completed Day 7!\n\nYou\'ve mastered sets!\n' + `Current streak: ${streak} day${streak > 1 ? 's' : ''}!`); }
+        function goToNextDay() { if (completedExercises.size < 5) { const remaining = 5 - completedExercises.size; document.getElementById('remaining-exercises').textContent = `You have ${remaining} exercise${remaining > 1 ? 's' : ''} left to complete.`; document.getElementById('completion-modal').classList.add('show'); } else { window.location.href = 'day-8.html'; } }
+        function goToPreviousDay() { window.location.href = 'day-6.html'; }
+        function closeModal() { document.getElementById('completion-modal').classList.remove('show'); }
+        document.addEventListener('keydown', function (e) { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { const active = document.activeElement; if (active.id === 'playground-code') { runPlayground(); e.preventDefault(); } } });
+        document.addEventListener('DOMContentLoaded', function () { Prism.highlightAll(); });
+    </script>
 </body>
+
 </html>

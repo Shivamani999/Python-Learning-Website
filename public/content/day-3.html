@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>30 Days of Python - Day 3</title>
+    <title>Day 3: Boolean & Operators | 30 Days of Python</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
         * {
             margin: 0;
@@ -11,95 +12,1234 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-blue: #3776ab;
+            --primary-yellow: #ffd43b;
+            --success-green: #4CAF50;
+            --error-red: #f44336;
+            --dark-bg: #1e1e1e;
+            --light-bg: #f8f9fa;
+            --text-dark: #333;
+            --text-light: #666;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            color: var(--text-dark);
+            background: #fff;
+        }
+
+        /* Header Navigation */
+        .top-nav {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #2c5d87 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-title .day-number {
+            background: var(--primary-yellow);
+            color: var(--primary-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .streak-counter {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .streak-counter .fire {
+            font-size: 1.5rem;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 500px;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 3rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .motivational-quote {
+            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 25%, #00BFFF 50%, #98FB98 75%, #FFB6C1 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+            line-height: 1.8;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .author-info {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            padding: 1.5rem;
+            border-top: 2px solid rgba(255,255,255,0.4);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .author-info:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .author-info p {
+            margin: 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .author-info .author-label {
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        .author-info a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-bottom: 3px solid var(--primary-yellow);
+            padding-bottom: 0.2rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .author-info a:hover {
+            color: var(--primary-yellow);
+            text-shadow: 0 0 8px rgba(255, 212, 59, 0.6);
+            transform: scale(1.05);
+            letter-spacing: 0.5px;
+        }
+
+        .linkedin-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #0077B5;
+        }
+
+        /* Learning Objectives */
+        .learning-objectives {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8eef7 100%);
+            border-left: 5px solid var(--primary-blue);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(55, 118, 171, 0.1);
+        }
+
+        .learning-objectives h3 {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
+        }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .objective-item:hover {
+            background: #f0f7ff;
+            border-color: var(--primary-blue);
+            box-shadow: 0 2px 8px rgba(55, 118, 171, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .objective-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #2c5d87 100%);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .objective-item span:last-child {
+            color: var(--text-dark);
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        h2 {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-yellow);
+        }
+
+        h3 {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+            color: var(--text-light);
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border-left: 4px solid var(--primary-yellow);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        /* Code Blocks with Syntax Highlighting */
+        pre {
+            background: #2d2d2d !important;
+            border-radius: 8px;
+            padding: 1.5rem !important;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary-yellow);
+        }
+
+        pre code {
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            font-size: 0.95rem;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            color: #e74c3c;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Executor Sidebar */
+        .executor-sidebar {
+            background: var(--light-bg);
+            border-left: 2px solid #ddd;
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
+        }
+
+        .executor-title {
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 200px;
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            font-size: 14px;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: var(--dark-bg);
+            color: #f8f8f2;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .executor-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-run {
+            background: var(--success-green);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-run:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-clear {
+            background: var(--error-red);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-clear:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        }
+
+        .output-container {
+            background: var(--dark-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #00ff00;
+            white-space: pre-wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .output-container.error {
+            color: #ff6b6b;
+        }
+
+        /* Exercise Section */
+        .exercise-section {
+            background: white;
+            border: 2px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-title {
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .exercise-status {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .exercise-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .exercise-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .verify-btn {
+            background: var(--primary-blue);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .verify-btn:hover {
+            background: #2c5d87;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(55, 118, 171, 0.3);
+        }
+
+        .hint-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-right: 0.5rem;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .hint-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .hint-btn:active {
+            transform: translateY(0);
+        }
+
+        .hint-text {
+            background: #e8d5f2;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+            color: #333;
+            display: none;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .hint-text.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback-message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .feedback-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        /* Navigation Buttons */
+        .day-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0;
+            padding: 2rem 0;
+            border-top: 2px solid #eee;
+        }
+
+        .nav-btn {
+            padding: 1rem 2rem;
+            border: 2px solid var(--primary-blue);
+            background: white;
+            color: var(--primary-blue);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(55, 118, 171, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .nav-btn.next {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .nav-btn.next:hover {
+            background: #2c5d87;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
             align-items: center;
             justify-content: center;
         }
 
-        .container {
-            max-width: 800px;
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #3776ab 0%, #ffd43b 100%);
-            color: white;
-            padding: 60px 40px;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
             text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
-        .emoji {
-            font-size: 5em;
-            display: block;
-            margin-bottom: 20px;
+        .modal-content h2 {
+            border: none;
+            margin-bottom: 1rem;
         }
 
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            font-size: 1.5em;
-            font-weight: 400;
-        }
-
-        .content {
-            padding: 60px 40px;
-            text-align: center;
-        }
-
-        .coming-soon {
-            font-size: 2em;
-            color: #3776ab;
-            margin-bottom: 20px;
-        }
-
-        p {
-            color: #666;
-            font-size: 1.1em;
-            line-height: 1.8;
-            margin-bottom: 30px;
-        }
-
-        .back-btn {
-            display: inline-block;
-            background: #3776ab;
+        .modal-btn {
+            background: var(--primary-blue);
             color: white;
-            padding: 15px 30px;
+            border: none;
+            padding: 0.8rem 2rem;
             border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.3s;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
         }
 
-        .back-btn:hover {
-            background: #2d5f8d;
+        /* Progress Bar */
+        .progress-container {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-blue), var(--primary-yellow));
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .executor-sidebar {
+                border-left: none;
+                border-top: 2px solid #ddd;
+                max-height: none;
+            }
+
+            .content-area {
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 1.5rem;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <span class="emoji">🐍</span>
-            <h1>30 Days Of Python</h1>
-            <h2>Day 3 - Coming Soon</h2>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="nav-title">
+            🐍 30 Days of Python
+            <span class="day-number">Day 3/30</span>
         </div>
-        <div class="content">
-            <div class="coming-soon">📝 Content Coming Soon</div>
-            <p>This day's content is being prepared. Check back later for the complete lesson, examples, and exercises.</p>
-            <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        <div class="streak-counter">
+            <span class="fire">🔥</span>
+            <span id="streak-count">0</span> Day Streak
         </div>
     </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Content Area -->
+        <div class="content-area">
+            <div class="hero-section">
+                <h1>Day 3: Boolean & Operators</h1>
+                <div class="motivational-quote">
+                    ✨ "You have boundless energy. You are three steps ahead on your way to greatness!" ✨
+                </div>
+                <div class="author-info">
+                    <p><span class="author-label">👨‍🏫 Learn from:</span> <a href="https://www.linkedin.com/in/smk99" target="_blank" title="Visit LinkedIn Profile"><span class="linkedin-icon">in</span> Konam Shivamani</a></p>
+                </div>
+            </div>
+
+            <!-- Learning Objectives -->
+            <div class="learning-objectives">
+                <h3>📚 What You'll Learn Today</h3>
+                <div class="objectives-grid">
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Master Boolean data types (True and False)</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Use Assignment operators effectively</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Perform Arithmetic operations</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Compare values with Comparison operators</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Combine conditions with Logical operators</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Use 'in', 'not in', 'is', and 'is not' operators</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress -->
+            <div>
+                <h3>Your Progress Today</h3>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+                <p id="progress-text">0 of 5 exercises completed</p>
+            </div>
+
+            <h2>🔵 Boolean Data Type</h2>
+            <p>A boolean data type represents one of two values: <strong>True</strong> or <strong>False</strong>. The first letter <strong>T</strong> for True and <strong>F</strong> for False should be capital. Boolean values are used when we work with comparison operators.</p>
+
+            <h3>Boolean Examples</h3>
+            <pre><code class="language-python">print(True)
+print(False)
+
+# Boolean results from comparisons
+print(3 > 2)     # True
+print(3 < 2)     # False
+print(3 == 3)    # True</code></pre>
+
+            <h2>⚙️ Operators</h2>
+            <p>Python language supports several types of operators. Operators are used to perform operations on variables and values.</p>
+
+            <h3>Assignment Operators</h3>
+            <p>Assignment operators are used to assign values to variables.</p>
+            <pre><code class="language-python">x = 10        # Simple assignment
+x += 5        # Add and assign (x = x + 5)
+x -= 3        # Subtract and assign (x = x - 3)
+x *= 2        # Multiply and assign (x = x * 2)
+x /= 2        # Divide and assign (x = x / 2)
+x %= 3        # Modulus and assign (x = x % 3)</code></pre>
+
+            <h3>Arithmetic Operators</h3>
+            <p>Arithmetic operators are used to perform mathematical operations.</p>
+            <ul>
+                <li><strong>Addition (+):</strong> a + b</li>
+                <li><strong>Subtraction (-):</strong> a - b</li>
+                <li><strong>Multiplication (*):</strong> a * b</li>
+                <li><strong>Division (/):</strong> a / b</li>
+                <li><strong>Modulus (%):</strong> a % b (remainder)</li>
+                <li><strong>Floor Division (//):</strong> a // b (division without remainder)</li>
+                <li><strong>Exponentiation (**):</strong> a ** b (power)</li>
+            </ul>
+
+            <h3>Arithmetic Examples</h3>
+            <pre><code class="language-python">print('Addition: ', 1 + 2)        # 3
+print('Subtraction: ', 2 - 1)     # 1
+print('Multiplication: ', 2 * 3)  # 6
+print('Division: ', 6 / 2)        # 3.0
+print('Floor Division: ', 7 // 2) # 3
+print('Modulus: ', 3 % 2)         # 1
+print('Exponentiation: ', 2 ** 3) # 8
+
+# Real world example
+radius = 10
+area_of_circle = 3.14 * radius ** 2
+print('Area of circle:', area_of_circle)  # 314.0</code></pre>
+
+            <h3>Comparison Operators</h3>
+            <p>Comparison operators are used to compare values. They return either True or False.</p>
+            <pre><code class="language-python">print(3 > 2)      # True (greater than)
+print(3 >= 2)     # True (greater than or equal)
+print(3 < 2)      # False (less than)
+print(2 < 3)      # True (less than)
+print(2 <= 3)     # True (less than or equal)
+print(3 == 2)     # False (equal)
+print(3 != 2)     # True (not equal)
+
+# String comparisons
+print(len('mango') == len('avocado'))  # False (5 != 7)
+print(len('mango') < len('avocado'))   # True (5 < 7)</code></pre>
+
+            <h3>Additional Comparison Operators</h3>
+            <pre><code class="language-python"># 'is' operator - checks if variables are same object
+print(1 is 1)  # True
+
+# 'in' operator - checks if value exists in a sequence
+print('A' in 'Asabeneh')  # True
+print('B' in 'Asabeneh')  # False
+print('coding' in 'coding for all')  # True
+
+# 'not in' operator - opposite of 'in'
+print('python' not in 'I love coding')  # True</code></pre>
+
+            <h3>Logical Operators</h3>
+            <p>Logical operators are used to combine conditional statements. Python uses keywords: <strong>and</strong>, <strong>or</strong>, and <strong>not</strong>.</p>
+
+            <pre><code class="language-python"># 'and' operator - returns True if both statements are true
+print(3 > 2 and 4 > 3)   # True
+print(3 > 2 and 4 < 3)   # False
+
+# 'or' operator - returns True if at least one statement is true
+print(3 > 2 or 4 > 3)    # True
+print(3 > 2 or 4 < 3)    # True
+print(3 < 2 or 4 < 3)    # False
+
+# 'not' operator - reverses the result
+print(not 3 > 2)         # False (reverses True to False)
+print(not False)         # True (reverses False to True)</code></pre>
+
+            <h2>💻 Exercises</h2>
+
+            <!-- Exercise 1 -->
+            <div class="exercise-section" id="exercise-1">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 1: Boolean Comparisons</div>
+                    <div class="exercise-status pending" id="status-1">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Write code that prints the results of comparing 10 > 5, 10 == 10, and 10 != 5</p>
+                <p><strong>Expected Output:</strong> Three lines with True, True, and True</p>
+                <textarea class="code-editor" id="code-1" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(1)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-1">Use comparison operators (>, ==, !=) with print() statements. Three separate print statements will print three lines.</div>
+                <button class="verify-btn" onclick="verifyExercise(1)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-1"></div>
+            </div>
+
+            <!-- Exercise 2 -->
+            <div class="exercise-section" id="exercise-2">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 2: Arithmetic Operations</div>
+                    <div class="exercise-status pending" id="status-2">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Declare variables: a = 5, b = 3. Calculate and print: sum, difference, product, division, floor division, modulus, and exponentiation</p>
+                <p><strong>Expected Output:</strong> All 7 operations printed</p>
+                <textarea class="code-editor" id="code-2" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(2)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-2">Create variables a = 5, b = 3. Then print each operation: a+b, a-b, a*b, a/b, a//b, a%b, a**b on separate lines with labels.</div>
+                <button class="verify-btn" onclick="verifyExercise(2)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-2"></div>
+            </div>
+
+            <!-- Exercise 3 -->
+            <div class="exercise-section" id="exercise-3">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 3: Logical Operations</div>
+                    <div class="exercise-status pending" id="status-3">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Print results of: (5 > 3 and 8 > 6), (5 > 8 or 8 > 6), and (not 5 > 8)</p>
+                <p><strong>Expected Output:</strong> True, True, True</p>
+                <textarea class="code-editor" id="code-3" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(3)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-3">Use logical operators (and, or, not) in print statements. Evaluate the comparisons: 5>3 is True, 8>6 is True, 5>8 is False, etc.</div>
+                <button class="verify-btn" onclick="verifyExercise(3)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-3"></div>
+            </div>
+
+            <!-- Exercise 4 -->
+            <div class="exercise-section" id="exercise-4">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 4: Circle Area Calculation</div>
+                    <div class="exercise-status pending" id="status-4">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Get radius as input from user. Calculate and print the area (area = π × r²) and circumference (c = 2 × π × r). Use pi = 3.14</p>
+                <p><strong>Expected (for radius 5):</strong> Area: 78.5, Circumference: 31.4</p>
+                <textarea class="code-editor" id="code-4" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(4)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-4">Use input() to get radius, convert with int() or float(). Calculate area = 3.14 * radius ** 2 and circumference = 2 * 3.14 * radius. Print both with labels.</div>
+                <button class="verify-btn" onclick="verifyExercise(4)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-4"></div>
+            </div>
+
+            <!-- Exercise 5 -->
+            <div class="exercise-section" id="exercise-5">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 5: Triangle Perimeter</div>
+                    <div class="exercise-status pending" id="status-5">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Get three sides of a triangle as input from user. Calculate and print the perimeter (perimeter = a + b + c)</p>
+                <p><strong>Expected (for sides 5, 4, 3):</strong> The perimeter of the triangle is 12</p>
+                <textarea class="code-editor" id="code-5" placeholder="Write your code here..."></textarea>
+                <button class="hint-btn" onclick="toggleHint(5)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-5">Use input() three times to get sides a, b, c. Convert each to int() or float(). Calculate perimeter = a + b + c and print with a message.</div>
+                <button class="verify-btn" onclick="verifyExercise(5)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-5"></div>
+            </div>
+
+            <div class="highlight-box">
+                <strong>🌕 Milestone:</strong> You're now on Day 3! You've mastered Boolean logic and operators. Keep pushing!
+            </div>
+
+            <!-- Day Navigation -->
+            <div class="day-navigation">
+                <button class="nav-btn prev" onclick="goToPreviousDay()">← Previous Day</button>
+                <button class="nav-btn next" onclick="goToNextDay()">Next Day →</button>
+            </div>
+        </div>
+
+        <!-- Executor Sidebar -->
+        <div class="executor-sidebar">
+            <div class="executor-title">🐍 Python Playground</div>
+            <p style="color: #666; margin-bottom: 1rem;">Test your Python code here!</p>
+            
+            <textarea class="code-editor" id="playground-code"># Try your own code here..
+            </textarea>
+            
+            <div class="executor-buttons">
+                <button class="btn btn-run" onclick="runPlayground()">▶ Run</button>
+                <button class="btn btn-clear" onclick="clearPlayground()">🗑 Clear</button>
+            </div>
+            
+            <div class="output-container" id="playground-output">Click "Run" to execute code...</div>
+
+            <div class="info-box">
+                <strong>💡 Tip:</strong> Experiment with Boolean values, comparisons, and operators in the playground!
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="modal" id="completion-modal">
+        <div class="modal-content">
+            <h2>⚠️ Complete Today's Exercises</h2>
+            <p>You need to complete all exercises before moving to the next day!</p>
+            <p><strong id="remaining-exercises"></strong></p>
+            <button class="modal-btn" onclick="closeModal()">Got it!</button>
+        </div>
+    </div>
+
+    <!-- Syntax Highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+    <script>
+        // State Management
+        let completedExercises = new Set(JSON.parse(localStorage.getItem('day3-completed') || '[]'));
+        let streak = parseInt(localStorage.getItem('streak') || '0');
+
+        // Initialize
+        document.getElementById('streak-count').textContent = streak;
+        updateProgress();
+        checkCompletedExercises();
+        document.querySelectorAll('.btn-run, .verify-btn').forEach(b => b.disabled = true);
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPyodideRuntime().catch(err => {
+                console.error('Failed to load Pyodide:', err);
+                document.getElementById('playground-output').textContent = 'Failed to load Python interpreter — using fallback.';
+            });
+        });
+
+        let pyodide = null;
+        let pyodideReady = false;
+
+        async function loadPyodideRuntime() {
+            if (!window.loadPyodide) {
+                const s = document.createElement('script');
+                s.src = "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js";
+                document.head.appendChild(s);
+                await new Promise(resolve => s.onload = resolve);
+            }
+
+            pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.23.4/full/' });
+            pyodideReady = true;
+            document.querySelectorAll('.btn-run, .verify-btn').forEach(b => b.disabled = false);
+            document.getElementById('playground-output').textContent = 'Python interpreter ready — click Run';
+        }
+
+        function runPythonFallback(code) {
+            try {
+                let output = [];
+                const context = {
+                    print: (...args) => {
+                        output.push(args.map(arg => {
+                            if (typeof arg === 'object') {
+                                return JSON.stringify(arg).replace(/"/g, "'");
+                            }
+                            return String(arg);
+                        }).join(' '));
+                    },
+                    type: (val) => {
+                        if (Array.isArray(val)) return "<class 'list'>";
+                        if (val === null) return "<class 'NoneType'>";
+                        if (typeof val === 'object' && !Array.isArray(val)) return "<class 'dict'>";
+                        if (typeof val === 'number') return Number.isInteger(val) ? "<class 'int'>" : "<class 'float'>";
+                        if (typeof val === 'string') return "<class 'str'>";
+                        if (typeof val === 'boolean') return "<class 'bool'>";
+                        return "<class 'object'>";
+                    },
+                    True: true,
+                    False: false,
+                    None: null
+                };
+
+                let jsCode = code
+                    .split('\n')
+                    .map(line => {
+                        const commentIndex = line.indexOf('#');
+                        if (commentIndex !== -1) {
+                            const beforeComment = line.substring(0, commentIndex);
+                            const singleQuotes = (beforeComment.match(/'/g) || []).length;
+                            const doubleQuotes = (beforeComment.match(/"/g) || []).length;
+                            if (singleQuotes % 2 === 0 && doubleQuotes % 2 === 0) {
+                                return line.substring(0, commentIndex).trim();
+                            }
+                        }
+                        return line;
+                    })
+                    .join('\n')
+                    .replace(/"""[\s\S]*?"""/g, '')
+                    .replace(/'''[\s\S]*?'''/g, '')
+                    .replace(/\bTrue\b/g, 'true')
+                    .replace(/\bFalse\b/g, 'false')
+                    .replace(/print\((.*?)\)/g, 'context.print($1)')
+                    .replace(/type\((.*?)\)/g, 'context.type($1)')
+                    .replace(/(\d+)\s*\/\/\s*(\d+)/g, 'Math.floor($1/$2)');
+
+                const func = new Function('context', jsCode);
+                func(context);
+
+                return { success: true, output: output.join('\n') || '(No output)' };
+            } catch (error) {
+                return { success: false, output: 'Error: ' + error.message };
+            }
+        }
+
+        async function runPython(code) {
+            if (pyodideReady && pyodide) {
+                try {
+                    const wrapper = `import sys, io\n_io = io.StringIO()\nold = sys.stdout\nsys.stdout = _io\ntry:\n` +
+                        code.split('\n').map(l => '    ' + l).join('\n') +
+                        `\nfinally:\n    sys.stdout = old\n_output = _io.getvalue()`;
+
+                    await pyodide.runPythonAsync(wrapper);
+                    const out = pyodide.globals.get('_output');
+                    const outStr = out === undefined || out === null ? '(No output)' : String(out);
+                    return { success: true, output: outStr.trim() || '(No output)' };
+                } catch (err) {
+                    return { success: false, output: 'Error: ' + (err.message || err) };
+                }
+            } else {
+                return runPythonFallback(code);
+            }
+        }
+
+        async function runPlayground() {
+            const code = document.getElementById('playground-code').value;
+            const outputEl = document.getElementById('playground-output');
+
+            outputEl.textContent = 'Running...';
+            outputEl.className = 'output-container';
+
+            const result = await runPython(code);
+            outputEl.textContent = result.output;
+            if (!result.success) {
+                outputEl.classList.add('error');
+            }
+        }
+
+        function clearPlayground() {
+            document.getElementById('playground-output').textContent = 'Output cleared. Run code to see results...';
+            document.getElementById('playground-output').className = 'output-container';
+        }
+
+        function toggleHint(exerciseNum) {
+            const hintEl = document.getElementById(`hint-${exerciseNum}`);
+            const btnEl = event.target;
+            hintEl.classList.toggle('show');
+            btnEl.textContent = hintEl.classList.contains('show') ? '💡 Hide Hint' : '💡 Get Hint';
+        }
+
+        async function verifyExercise(exerciseNum) {
+            const code = document.getElementById(`code-${exerciseNum}`).value;
+            const feedbackEl = document.getElementById(`feedback-${exerciseNum}`);
+            const statusEl = document.getElementById(`status-${exerciseNum}`);
+
+            if (!code.trim()) {
+                feedbackEl.textContent = '❌ Please write some code first!';
+                feedbackEl.className = 'feedback-message error';
+                return;
+            }
+
+            const result = await runPython(code);
+            const output = (result.output || '').trim();
+            let isCorrect = false;
+
+            if (exerciseNum === 1) {
+                // Check for three True values in output
+                const lines = output.split('\n').map(l => l.trim());
+                isCorrect = lines.filter(l => l === 'True').length >= 2 && result.success;
+            } else if (exerciseNum === 2) {
+                // Check if output contains multiple numbers (all 7 operations)
+                const numbers = output.match(/\d+\.?\d*/g);
+                isCorrect = numbers && numbers.length >= 7 && result.success;
+            } else if (exerciseNum === 3) {
+                // Check for three True values
+                const lines = output.split('\n').map(l => l.trim());
+                isCorrect = lines.filter(l => l === 'True').length >= 3 && result.success;
+            } else if (exerciseNum === 4) {
+                // Check for area and circumference with radius 5
+                isCorrect = output.includes('78.5') && output.includes('31.4') && result.success;
+            } else if (exerciseNum === 5) {
+                // Check for perimeter result (with sides 5, 4, 3 = 12)
+                isCorrect = output.includes('12') && output.toLowerCase().includes('perimeter') && result.success;
+            }
+
+            if (isCorrect) {
+                feedbackEl.textContent = '✅ Correct! Great job!';
+                feedbackEl.className = 'feedback-message success';
+                statusEl.textContent = 'Completed';
+                statusEl.className = 'exercise-status completed';
+
+                if (!completedExercises.has(exerciseNum)) {
+                    completedExercises.add(exerciseNum);
+                    saveProgress();
+                    updateProgress();
+
+                    if (completedExercises.size === 5) {
+                        setTimeout(celebrateCompletion, 500);
+                    }
+                }
+            } else {
+                feedbackEl.textContent = `❌ Not quite right. Your output: ${output}`;
+                feedbackEl.className = 'feedback-message error';
+            }
+        }
+
+        function updateProgress() {
+            const completed = completedExercises.size;
+            const total = 5;
+            const percentage = (completed / total) * 100;
+            
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `${completed} of ${total} exercises completed`;
+        }
+
+        function checkCompletedExercises() {
+            completedExercises.forEach(num => {
+                document.getElementById(`status-${num}`).textContent = 'Completed';
+                document.getElementById(`status-${num}`).className = 'exercise-status completed';
+            });
+        }
+
+        function saveProgress() {
+            localStorage.setItem('day3-completed', JSON.stringify([...completedExercises]));
+        }
+
+        function celebrateCompletion() {
+            if (!localStorage.getItem('day3-finished')) {
+                streak++;
+                localStorage.setItem('streak', streak);
+                localStorage.setItem('day3-finished', 'true');
+                document.getElementById('streak-count').textContent = streak;
+            }
+            
+            alert('🎉 Congratulations! You completed Day 3!\n\n' +
+                  'You\'ve mastered Boolean and Operators!\n' +
+                  `Current streak: ${streak} day${streak > 1 ? 's' : ''}!`);
+        }
+
+        function goToNextDay() {
+            if (completedExercises.size < 5) {
+                const remaining = 5 - completedExercises.size;
+                document.getElementById('remaining-exercises').textContent = 
+                    `You have ${remaining} exercise${remaining > 1 ? 's' : ''} left to complete.`;
+                document.getElementById('completion-modal').classList.add('show');
+            } else {
+                window.location.href = 'day-4.html';
+            }
+        }
+
+        function goToPreviousDay() {
+            window.location.href = 'day-2.html';
+        }
+
+        function closeModal() {
+            document.getElementById('completion-modal').classList.remove('show');
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                const activeElement = document.activeElement;
+                if (activeElement.id === 'playground-code') {
+                    runPlayground();
+                    e.preventDefault();
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            Prism.highlightAll();
+        });
+    </script>
 </body>
 </html>
