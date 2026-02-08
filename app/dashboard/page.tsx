@@ -105,102 +105,95 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen magic-bg relative overflow-hidden">
+      {/* sparkles */}
+      <div className="sparkles" aria-hidden>
+        <span style={{ left: '5%', top: '90%', animationDelay: '0s' }} />
+        <span style={{ left: '20%', top: '95%', animationDelay: '0.8s', width: '8px', height: '8px' }} />
+        <span style={{ left: '50%', top: '100%', animationDelay: '1.6s' }} />
+        <span style={{ left: '75%', top: '110%', animationDelay: '2.4s', width: '7px', height: '7px' }} />
+      </div>
+
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="glass-card shadow-sm sticky top-0 z-10 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <span className="text-3xl">🐍</span>
-            <h1 className="text-xl font-bold text-blue-600">30 Days Of Python</h1>
-          </Link>
-          <button onClick={handleSignOut} className="text-gray-600 hover:text-gray-900">
-            Sign Out
-          </button>
+          <div className="flex items-center gap-4">
+            <span className="text-3xl mr-1 animate-pulse">🐍</span>
+            <h1 className="text-2xl font-bold text-white">30 Days Of Python</h1>
+            <div className="ml-4 text-sm text-white/60">Keep your streak alive ✨</div>
+          </div>
+          <div className="flex items-center gap-4">
+            <button onClick={handleSignOut} className="text-white text-sm bg-white/10 hover:bg-white/15 px-4 py-2 rounded-lg transition">Sign Out</button>
+          </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          {/* Progress Card */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="text-center">
-              <div className="relative inline-flex items-center justify-center w-32 h-32 mb-4">
-                <svg className="w-32 h-32 transform -rotate-90">
-                  <circle
-                    cx="64"
-                    cy="64"
-                    r="56"
-                    stroke="#e5e7eb"
-                    strokeWidth="8"
-                    fill="none"
-                  />
-                  <circle
-                    cx="64"
-                    cy="64"
-                    r="56"
-                    stroke="#3776ab"
-                    strokeWidth="8"
-                    fill="none"
-                    strokeDasharray={`${(completedDays / 30) * 351.86} 351.86`}
-                    className="transition-all duration-500"
-                  />
-                </svg>
-                <div className="absolute text-center">
-                  <div className="text-3xl font-bold">{completedDays}</div>
-                  <div className="text-sm text-gray-500">/ 30</div>
-                </div>
-              </div>
-              <h3 className="text-lg font-semibold">Days Completed</h3>
-            </div>
+      {/* Hero Section */}
+      <section className="text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-5xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-green-200 to-pink-300">Learn Python in 30 Days</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90">A journey of tiny steps that becomes your strongest habit. ✨</p>
+          <div className="flex gap-4 justify-center">
+            <Link href={`/day/${getNextDay()}`} className="py-3 px-8 btn-magic font-bold shadow-lg">Continue Learning</Link>
+            <Link href="/dashboard" className="py-3 px-6 bg-white/8 text-white rounded-lg">Your Progress</Link>
           </div>
+        </div>
+      </section>
 
-          {/* Current Streak */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="text-center">
-              <div className="text-6xl mb-2">🔥</div>
-              <div className="text-4xl font-bold text-blue-600 mb-2">
-                {streak?.current_streak || 0}
+      {/* Features / Stats */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid md:grid-cols-3 gap-6 -mt-16">
+        <div className="glass-card p-6 rounded-2xl float-anim border border-white/10">
+          <div className="text-center">
+            <div className="relative inline-flex items-center justify-center w-32 h-32 mb-4">
+              <svg className="w-32 h-32 transform -rotate-90">
+                <circle cx="64" cy="64" r="56" stroke="rgba(255,255,255,0.08)" strokeWidth="8" fill="none" />
+                <circle cx="64" cy="64" r="56" stroke="url(#grad1)" strokeWidth="8" fill="none" strokeDasharray={`${(completedDays / 30) * 351.86} 351.86`} />
+                <defs>
+                  <linearGradient id="grad1" x1="0%" x2="100%">
+                    <stop offset="0%" stopColor="#7b2ff7" />
+                    <stop offset="100%" stopColor="#2af598" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div className="absolute text-center">
+                <div className="text-3xl font-bold text-white">{completedDays}</div>
+                <div className="text-sm text-white/50">/ 30</div>
               </div>
-              <h3 className="text-lg font-semibold">Current Streak</h3>
-              <p className="text-sm text-gray-500 mt-1">day{streak?.current_streak !== 1 ? 's' : ''} in a row</p>
             </div>
-          </div>
-
-          {/* Longest Streak */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="text-center">
-              <div className="text-6xl mb-2">🏆</div>
-              <div className="text-4xl font-bold text-yellow-400 mb-2">
-                {streak?.longest_streak || 0}
-              </div>
-              <h3 className="text-lg font-semibold">Longest Streak</h3>
-              <p className="text-sm text-gray-500 mt-1">personal best</p>
-            </div>
+            <h3 className="text-lg font-semibold text-white">Days Completed</h3>
           </div>
         </div>
 
-        {/* Continue Learning */}
-        <div className="card mb-8">
-          <h2 className="text-2xl font-bold mb-4">
-            {completedDays === 0 ? 'Start Your Journey' : 'Continue Learning'}
-          </h2>
-          <p className="text-gray-600 mb-6">
-            {completedDays === 30 
-              ? '🎉 Congratulations! You\'ve completed all 30 days!' 
-              : `You're on Day ${getNextDay()}. Keep going!`}
-          </p>
-          <Link 
-            href={`/day/${getNextDay()}`}
-            className="btn-primary inline-block"
-          >
-            {completedDays === 0 ? 'Start Day 1' : `Continue to Day ${getNextDay()}`}
-          </Link>
+        <div className="glass-card p-6 rounded-2xl float-anim delay-200 border border-white/10">
+          <div className="text-center">
+            <div className="text-6xl mb-2">🔥</div>
+            <div className="text-4xl font-bold text-white mb-2">{streak?.current_streak || 0}</div>
+            <h3 className="text-lg font-semibold text-white">Current Streak</h3>
+            <p className="text-sm text-white/50 mt-1">day{streak?.current_streak !== 1 ? 's' : ''} in a row</p>
+          </div>
+        </div>
+
+        <div className="glass-card p-6 rounded-2xl float-anim delay-400 border border-white/10">
+          <div className="text-center">
+            <div className="text-6xl mb-2">🏆</div>
+            <div className="text-4xl font-bold text-yellow-300 mb-2">{streak?.longest_streak || 0}</div>
+            <h3 className="text-lg font-semibold text-white">Longest Streak</h3>
+            <p className="text-sm text-white/50 mt-1">personal best</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Continue Learning */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8 glass-card p-6 rounded-2xl border border-white/10">
+          <h2 className="text-2xl font-bold mb-4 text-white">{completedDays === 0 ? 'Start Your Journey' : 'Continue Learning'}</h2>
+          <p className="text-white/70 mb-6">{completedDays === 30 ? '🎉 Congratulations! You\'ve completed all 30 days!' : `You're on Day ${getNextDay()}. Keep going!`}</p>
+          <Link href={`/day/${getNextDay()}`} className="btn-magic inline-block py-3 px-6 font-bold">{completedDays === 0 ? 'Start Day 1' : `Continue to Day ${getNextDay()}`}</Link>
         </div>
 
         {/* Calendar View */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold mb-6">Your Progress</h2>
+        <div className="glass-card rounded-lg shadow-md p-6 border border-white/10">
+          <h2 className="text-2xl font-bold mb-6 text-white">Your Progress Calendar</h2>
           <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-10 gap-3">
             {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => {
               const dayProgress = progress.find(p => p.day_number === day)
@@ -214,8 +207,8 @@ export default function Dashboard() {
                     aspect-square flex items-center justify-center rounded-lg font-semibold
                     transition-all hover:scale-105
                     ${isCompleted 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-green-500 text-white font-bold' 
+                      : 'bg-white/10 text-white/70 hover:bg-white/15'
                     }
                   `}
                 >
@@ -226,6 +219,13 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-transparent text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p>© 2026 30 Days Of Python. Free for everyone.</p>
+        </div>
+      </footer>
     </div>
   )
 }

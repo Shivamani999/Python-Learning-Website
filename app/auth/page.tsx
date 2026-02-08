@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
@@ -12,6 +12,14 @@ export default function AuthPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [remember, setRemember] = useState(false)
+
+  useEffect(() => {
+    // subtle entry animation class on mount
+    document.documentElement.classList.add('magic-bg')
+    return () => { document.documentElement.classList.remove('magic-bg') }
+  }, [])
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,6 +41,9 @@ export default function AuthPage() {
         if (error) throw error
       }
       
+      // small UX: save email if remember checked
+      if (remember) localStorage.setItem('rememberEmail', email)
+
       router.push('/dashboard')
     } catch (error: any) {
       setError(error.message)
@@ -41,76 +52,126 @@ export default function AuthPage() {
     }
   }
 
+  const handleGoogleSignIn = async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+      if (error) throw error
+    } catch (error: any) {
+      setError(error.message)
+      setLoading(false)
+    }
+  }
+
+  const handleGitHubSignIn = async () => {
+    try {
+      setLoading(true)
+      setError('')
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
+      if (error) throw error
+    } catch (error: any) {
+      setError(error.message)
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    const saved = localStorage.getItem('rememberEmail')
+    if (saved) setEmail(saved)
+  }, [])
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-blue-600">
-      <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-3xl font-bold text-blue-600 mb-2">
-            <span>🐍</span>
-            <span>30 Days Of Python</span>
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden magic-bg">
+      {/* sparkles */}
+      <div className="sparkles" aria-hidden>
+        <span style={{left: '10%', top: '90%', animationDelay: '0s'}} />
+        <span style={{left: '30%', top: '95%', animationDelay: '1s', width: '8px', height: '8px'}} />
+        <span style={{left: '60%', top: '100%', animationDelay: '2s'}} />
+        <span style={{left: '80%', top: '110%', animationDelay: '3s', width: '9px', height: '9px'}} />
+      </div>
+
+      <div className="glass-card p-8 rounded-2xl shadow-2xl w-full max-w-md border border-white/10 backdrop-blur-md">
+        <div className="text-center mb-6">
+          <Link href="/" className="inline-flex items-center gap-2 text-3xl font-bold text-white mb-2">
+            <span className="text-3xl">🐍</span>
+            <span className="text-white">30 Days Of Python</span>
           </Link>
-          <p className="text-gray-600 mt-2">
-            {isLogin ? 'Welcome back!' : 'Start your learning journey'}
+          <p className="text-white/80 mt-2">
+            {isLogin ? 'Welcome back! Sign in to continue your streak ✨' : 'Create your account and start learning today!'}
           </p>
         </div>
 
-        <form onSubmit={handleAuth} className="space-y-6">
+        <form onSubmit={handleAuth} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              Email
-            </label>
+            <label htmlFor="email" className="block text-sm font-medium text-white mb-2">Email Address</label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              className="w-full px-4 py-3 rounded-lg input-magic focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Password
+            <label htmlFor="password" className="block text-sm font-medium text-white mb-2">Password</label>
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                className="w-full px-4 py-3 pr-12 rounded-lg input-magic focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="••••••••"
+              />
+              <button type="button" onClick={() => setShowPassword(s => !s)} className="absolute right-2 top-1/2 -translate-y-1/2 text-sm text-white/60 hover:text-white">{showPassword ? 'Hide' : 'Show'}</button>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <label className="inline-flex items-center gap-2 text-white text-sm">
+              <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} className="rounded" /> Remember me
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-              placeholder="••••••••"
-            />
+            <Link href="#" className="text-sm text-white/70 hover:text-white transition">Forgot?</Link>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-              {error}
-            </div>
+            <div className="bg-red-500/10 border border-red-600/10 text-red-100 px-4 py-3 rounded-lg text-sm">{error}</div>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-          >
+          <button type="submit" disabled={loading} className="w-full py-3 btn-magic disabled:opacity-60 disabled:cursor-not-allowed">
             {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
           </button>
+
+          <div className="flex items-center gap-2">
+            <hr className="flex-1 border-white/10" />
+            <small className="text-white/70 text-xs">or continue with</small>
+            <hr className="flex-1 border-white/10" />
+          </div>
+
+          <div className="flex gap-3">
+            <button type="button" onClick={handleGitHubSignIn} disabled={loading} className="flex-1 py-2 rounded-lg bg-white/10 text-white hover:bg-white/15 transition disabled:opacity-50 disabled:cursor-not-allowed">GitHub</button>
+            <button type="button" onClick={handleGoogleSignIn} disabled={loading} className="flex-1 py-2 rounded-lg bg-white/10 text-white hover:bg-white/15 transition disabled:opacity-50 disabled:cursor-not-allowed">Google</button>
+          </div>
         </form>
 
         <div className="mt-6 text-center">
-          <button
-            onClick={() => {
-              setIsLogin(!isLogin)
-              setError('')
-            }}
-            className="text-blue-600 hover:underline text-sm"
-          >
-            {isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}
-          </button>
+          <button onClick={() => { setIsLogin(!isLogin); setError('') }} className="text-white/80 hover:text-white transition text-sm">{isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}</button>
         </div>
       </div>
     </div>
