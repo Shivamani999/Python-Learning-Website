@@ -7,7 +7,6 @@ import { UserProgress, UserStreak } from '@/lib/types'
 import { shouldResetStreak } from '@/lib/streak'
 import Link from 'next/link'
 import { DynamicCodingBackground } from '@/components/DynamicCodingBackground'
-import { AnimatedRocketsAndAsteroids } from '@/components/AnimatedRocketsAndAsteroids'
 
 export default function Dashboard() {
   const router = useRouter()
@@ -110,9 +109,6 @@ export default function Dashboard() {
     <div className="min-h-screen magic-bg relative overflow-hidden">
       {/* Dynamic coding background */}
       <DynamicCodingBackground />
-      
-      {/* Animated rockets and asteroids */}
-      <AnimatedRocketsAndAsteroids />
 
       {/* sparkles */}
       <div className="sparkles" aria-hidden>
