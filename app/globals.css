@@ -25,3 +25,27 @@
 
 /* small helpers for form */
 .input-magic{ background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: white; } .input-magic::placeholder{ color: rgba(255,255,255,0.5); } .input-magic:focus{ background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
+
+/* 3D Landing Page Effects */
+.perspective-container { perspective: 1200px; }
+.card-3d { transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+.card-3d:hover { transform: rotateY(15deg) rotateX(5deg) scale(1.05); }
+.feature-card { background: linear-gradient(135deg, rgba(59,130,246,0.95), rgba(99,102,241,0.95)); position: relative; overflow: hidden; }
+.feature-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1), transparent); animation: shine 3s infinite; }
+@keyframes shine { 0% { transform: translate(-100%, -100%); } 100% { transform: translate(100%, 100%); } }
+.float-box { animation: floatBox 4s ease-in-out infinite; }
+@keyframes floatBox { 0%, 100% { transform: translateY(0px) rotateZ(0deg); } 50% { transform: translateY(-20px) rotateZ(2deg); } }
+.gradient-text { background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6, #10b981); background-size: 300% 300%; animation: gradientFlow 8s ease infinite; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+@keyframes gradientFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+.tilt-card { transform-style: preserve-3d; }
+
+/* Dynamic Coding Background */
+.coding-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
+.code-line { position: absolute; font-family: 'Courier New', monospace; font-size: 12px; color: rgba(123, 47, 247, 0.3); white-space: nowrap; animation: fallCode linear infinite; text-shadow: 0 0 10px rgba(123, 47, 247, 0.4); }
+@keyframes fallCode { 0% { transform: translateY(-100%) rotateX(0deg); opacity: 0.6; } 50% { opacity: 0.8; } 100% { transform: translateY(100vh) rotateX(360deg); opacity: 0; } }
+.code-block { position: absolute; background: rgba(123, 47, 247, 0.08); border: 1px solid rgba(123, 47, 247, 0.2); border-radius: 8px; padding: 8px 12px; font-family: 'Courier New', monospace; font-size: 11px; color: rgba(42, 245, 152, 0.5); animation: floatCode 8s ease-in-out infinite; backdrop-filter: blur(4px); }
+@keyframes floatCode { 0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); } 25% { transform: translateY(-20px) translateX(10px) rotate(1deg); } 50% { transform: translateY(-40px) translateX(-10px) rotate(-1deg); } 75% { transform: translateY(-20px) translateX(10px) rotate(1deg); } }
+.pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
+@keyframes pulseGlow { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.7; } }
+.code-cursor { position: absolute; width: 2px; height: 20px; background: linear-gradient(180deg, rgba(42, 245, 152, 0.8), transparent); animation: blink 1s infinite; }
+@keyframes blink { 0%, 49%, 100% { opacity: 1; } 50%, 99% { opacity: 0; } }

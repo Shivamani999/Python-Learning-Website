@@ -152,8 +152,14 @@ export default function AuthPage() {
           </div>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-4">
           <button onClick={() => { setIsLogin(!isLogin); setError('') }} className="text-white/80 hover:text-white transition text-sm">{isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'}</button>
+          <div className="pt-4 border-t border-white/10">
+            <p className="text-sm text-white/60 mb-2">Learn more from:</p>
+            <a href="https://www.instagram.com/automationwithclarity" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white/70 hover:text-pink-400 transition font-semibold text-sm">
+              📱 Automation With Clarity
+            </a>
+          </div>
         </div>
       </div>
     </div>

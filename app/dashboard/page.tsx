@@ -6,6 +6,8 @@ import { supabase } from '@/lib/supabase'
 import { UserProgress, UserStreak } from '@/lib/types'
 import { shouldResetStreak } from '@/lib/streak'
 import Link from 'next/link'
+import { DynamicCodingBackground } from '@/components/DynamicCodingBackground'
+import { AnimatedRocketsAndAsteroids } from '@/components/AnimatedRocketsAndAsteroids'
 
 export default function Dashboard() {
   const router = useRouter()
@@ -106,6 +108,12 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen magic-bg relative overflow-hidden">
+      {/* Dynamic coding background */}
+      <DynamicCodingBackground />
+      
+      {/* Animated rockets and asteroids */}
+      <AnimatedRocketsAndAsteroids />
+
       {/* sparkles */}
       <div className="sparkles" aria-hidden>
         <span style={{ left: '5%', top: '90%', animationDelay: '0s' }} />
@@ -115,7 +123,7 @@ export default function Dashboard() {
       </div>
 
       {/* Header */}
-      <header className="glass-card shadow-sm sticky top-0 z-10 backdrop-blur-md border-b border-white/10">
+      <header className="glass-card shadow-sm sticky top-0 z-50 backdrop-blur-md border-b border-white/10 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <span className="text-3xl mr-1 animate-pulse">🐍</span>
@@ -129,7 +137,7 @@ export default function Dashboard() {
       </header>
 
       {/* Hero Section */}
-      <section className="text-white py-20">
+      <section className="text-white py-20 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-5xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-green-200 to-pink-300">Learn Python in 30 Days</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90">A journey of tiny steps that becomes your strongest habit. ✨</p>
@@ -141,7 +149,7 @@ export default function Dashboard() {
       </section>
 
       {/* Features / Stats */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid md:grid-cols-3 gap-6 -mt-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid md:grid-cols-3 gap-6 -mt-16 relative z-20">
         <div className="glass-card p-6 rounded-2xl float-anim border border-white/10">
           <div className="text-center">
             <div className="relative inline-flex items-center justify-center w-32 h-32 mb-4">
@@ -184,7 +192,7 @@ export default function Dashboard() {
       </div>
 
       {/* Continue Learning */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-20">
         <div className="mb-8 glass-card p-6 rounded-2xl border border-white/10">
           <h2 className="text-2xl font-bold mb-4 text-white">{completedDays === 0 ? 'Start Your Journey' : 'Continue Learning'}</h2>
           <p className="text-white/70 mb-6">{completedDays === 30 ? '🎉 Congratulations! You\'ve completed all 30 days!' : `You're on Day ${getNextDay()}. Keep going!`}</p>
@@ -221,9 +229,12 @@ export default function Dashboard() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-transparent text-white py-8">
+      <footer className="bg-transparent text-white py-8 border-t border-white/10 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>© 2026 30 Days Of Python. Free for everyone.</p>
+          <p className="mb-4">© 2026 30 Days Of Python. Free for everyone.</p>
+          <a href="https://www.instagram.com/automationwithclarity" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white/70 hover:text-pink-400 transition font-semibold">
+            📱 Follow: Automation With Clarity
+          </a>
         </div>
       </footer>
     </div>
