@@ -1,105 +1,1135 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>30 Days of Python - Day 8</title>
+    <title>Day 8: Dictionaries | 30 Days of Python</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
+        /* Styles same as other days (kept consistent) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-blue: #ffd43b;
+            --primary-yellow: #ff8c00;
+            --success-green: #4CAF50;
+            --error-red: #f44336;
+            --dark-bg: #1e1e2e;
+            --light-bg: #0f1420;
+            --text-dark: #e0e0e0;
+            --text-light: #d0d0d0;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #e0e0e0;
+            background: #0a0e27;
+        }
+
+        .top-nav {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, #2c5d87 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-title .day-number {
+            background: var(--primary-yellow);
+            color: var(--primary-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            margin-left: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .streak-counter {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 500px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .content-area {
+            padding: 3rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
+        }
+
+        .hero-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .motivational-quote {
+            background: linear-gradient(135deg, #FFD700 0%, #FF69B4 25%, #00BFFF 50%, #98FB98 75%, #FFB6C1 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+            line-height: 1.8;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        .learning-objectives {
+            background: linear-gradient(135deg, rgba(30, 30, 50, 0.8) 0%, rgba(40, 50, 80, 0.8) 100%);
+            border-left: 5px solid var(--primary-yellow);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(255, 212, 59, 0.1);
+        }
+
+        .learning-objectives h3 {
+            color: #ffd43b;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            margin-top: 0;
+        }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(40, 50, 80, 0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 212, 59, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .objective-item:hover {
+            background: rgba(60, 80, 120, 0.8);
+            border-color: var(--primary-yellow);
+            box-shadow: 0 2px 8px rgba(255, 212, 59, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .objective-icon {
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #ffd43b 0%, #ff8c00 100%);
+            color: #0a0e27;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 2px;
         }
 
-        .container {
-            max-width: 800px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
+        .objective-item span:last-child {
+            color: #e0e0e0;
+            line-height: 1.5;
+            font-size: 0.95rem;
         }
 
-        .header {
-            background: linear-gradient(135deg, #3776ab 0%, #ffd43b 100%);
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .author-info {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            padding: 1.5rem;
+            border-top: 2px solid rgba(255,255,255,0.4);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .author-info:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .author-info p {
+            margin: 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .author-info .author-label {
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        .author-info a {
             color: white;
-            padding: 60px 40px;
-            text-align: center;
-        }
-
-        .emoji {
-            font-size: 5em;
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            font-size: 1.5em;
-            font-weight: 400;
-        }
-
-        .content {
-            padding: 60px 40px;
-            text-align: center;
-        }
-
-        .coming-soon {
-            font-size: 2em;
-            color: #3776ab;
-            margin-bottom: 20px;
-        }
-
-        p {
-            color: #666;
-            font-size: 1.1em;
-            line-height: 1.8;
-            margin-bottom: 30px;
-        }
-
-        .back-btn {
-            display: inline-block;
-            background: #3776ab;
-            color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
             text-decoration: none;
-            font-weight: 600;
-            transition: background 0.3s;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-bottom: 3px solid var(--primary-yellow);
+            padding-bottom: 0.2rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
-        .back-btn:hover {
-            background: #2d5f8d;
+        .author-info a:hover {
+            color: var(--primary-yellow);
+            text-shadow: 0 0 8px rgba(255, 212, 59, 0.6);
+            transform: scale(1.05);
+            letter-spacing: 0.5px;
+        }
+
+        .linkedin-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: #0077B5;
+        }
+
+        .section-title {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--primary-yellow);
+        }
+
+        .subsection-title {
+            color: var(--primary-yellow);
+            font-size: 1.5rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .content-text {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .code-example {
+            background: #1e1e2e;
+            border-left: 4px solid var(--primary-blue);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-example code {
+            color: #e0e0e0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-box {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success-green);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            color: var(--text-light);
+        }
+
+        .exercise-section {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid var(--primary-blue);
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .exercise-title {
+            font-size: 1.4rem;
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        .exercise-status {
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .exercise-status.pending {
+            background: rgba(255, 140, 0, 0.2);
+            color: var(--primary-yellow);
+        }
+
+        .exercise-status.completed {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-green);
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 150px;
+            background: #0f1420;
+            color: #e0e0e0;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            resize: vertical;
+            margin: 1rem 0;
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .hint-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            margin-right: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .hint-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .hint-text {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .hint-text.show {
+            display: block;
+        }
+
+        .verify-btn {
+            background: var(--success-green);
+            color: white;
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .verify-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .feedback-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .feedback-message.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success-green);
+            border-left: 4px solid var(--success-green);
+        }
+
+        .feedback-message.error {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--error-red);
+            border-left: 4px solid var(--error-red);
+        }
+
+        .progress-container {
+            background: #1a1a2e;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .progress-bar-container {
+            background: #0f1420;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--success-green) 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-text {
+            color: var(--text-light);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .executor-sidebar {
+            background: var(--light-bg);
+            border-left: 2px solid #ddd;
+            padding: 2rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 70px);
+        }
+
+        .executor-title {
+            font-size: 1.3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 200px;
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            font-size: 14px;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: var(--dark-bg);
+            color: #f8f8f2;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .executor-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn-run {
+            background: var(--success-green);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-run:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-clear {
+            background: var(--error-red);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-clear:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+        }
+
+        .output-container {
+            background: var(--dark-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #00ff00;
+            white-space: pre-wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .output-container.error {
+            color: #ff6b6b;
+        }
+
+        .day-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin: 3rem 0 2rem;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .nav-btn.prev {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            padding: 3rem;
+            border-radius: 15px;
+            max-width: 500px;
+            text-align: center;
+            border: 2px solid var(--primary-blue);
+        }
+
+        .modal-content h2 {
+            color: var(--primary-yellow);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .modal-btn {
+            background: var(--primary-blue);
+            color: #0a0e27;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .executor-sidebar {
+                border-left: none;
+                border-top: 2px solid #333;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <span class="emoji">🐍</span>
-            <h1>30 Days Of Python</h1>
-            <h2>Day 8 - Coming Soon</h2>
+    <div class="top-nav">
+        <div class="nav-title">
+            🐍 30 Days of Python
+            <span class="day-number">Day 8</span>
         </div>
-        <div class="content">
-            <div class="coming-soon">📝 Content Coming Soon</div>
-            <p>This day's content is being prepared. Check back later for the complete lesson, examples, and exercises.</p>
-            <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        <div class="streak-counter">
+            🔥 Streak: <span id="streak-count">0</span> days
         </div>
     </div>
+
+    <div class="main-container">
+        <div class="content-area">
+            <div class="hero-section">
+                <h1>📖 Day 8: Dictionaries</h1>
+                <div class="motivational-quote">
+                    "Dictionaries are the treasure maps of Python - each key unlocks a value! 🗝️✨"
+                </div>
+                <div class="author-info">
+                    <p><span class="author-label">👨‍🏫 Learn from:</span> <a href="https://www.linkedin.com/in/smk99"
+                            target="_blank" title="Visit LinkedIn Profile"><span class="linkedin-icon">in</span> Konam
+                            Shivamani</a></p>
+                </div>
+            </div>
+
+            <!-- Learning Objectives -->
+            <div class="learning-objectives">
+                <h3>📚 What You'll Learn Today</h3>
+                <div class="objectives-grid">
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Master built-in functions like print(), len(), type()</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Declare and use variables effectively</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Understand variable naming conventions</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Perform type casting with int(), str(), float()</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Work with user input using input()</span>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">✓</span>
+                        <span>Combine functions for powerful programs</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">📊 Your Progress</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar">0%</div>
+                </div>
+                <div class="progress-text" id="progress-text">0 of 5 exercises completed</div>
+            </div>
+
+            <div class="section-title">📚 What are Dictionaries?</div>
+            <p class="content-text">
+                A dictionary is a collection of <strong>unordered, modifiable (mutable) paired (key: value)</strong> data type.
+                Unlike lists that use numeric indexes, dictionaries use keys to access values.
+            </p>
+
+            <div class="subsection-title">Creating a Dictionary</div>
+            <p class="content-text">
+                To create a dictionary we use curly brackets <code>{}</code> or the <code>dict()</code> built-in function.
+            </p>
+
+            <div class="code-example">
+                <pre><code class="language-python"># Empty dictionary
+empty_dict = {}
+
+# Dictionary with data values
+dct = {'key1':'value1', 'key2':'value2', 'key3':'value3'}
+
+# Complex dictionary
+person = {
+    'first_name': 'Shiva',
+    'last_name': 'Konam',
+    'age': 250,
+    'country': 'Finland',
+    'is_married': True,
+    'skills': ['JavaScript', 'React', 'Node', 'MongoDB', 'Python'],
+    'address': {
+        'street': 'Space street',
+        'zipcode': '02210'
+    }
+}</code></pre>
+            </div>
+
+            <div class="info-box">
+                💡 <strong>Note:</strong> Dictionary values can be any data type: strings, numbers, booleans, lists, tuples, sets, or even other dictionaries!
+            </div>
+
+            <div class="subsection-title">Dictionary Length</div>
+            <p class="content-text">
+                Use <code>len()</code> to check the number of key-value pairs in a dictionary.
+            </p>
+
+            <div class="code-example">
+                <pre><code class="language-python">person = {
+    'first_name': 'Shiva',
+    'last_name': 'Konam',
+    'age': 250,
+    'country': 'Finland'
+}
+print(len(person))  # Output: 4</code></pre>
+            </div>
+
+            <div class="subsection-title">Accessing Dictionary Items</div>
+            <p class="content-text">
+                Access dictionary items by referring to the key name using square brackets or the <code>get()</code> method.
+            </p>
+
+            <div class="code-example">
+                <pre><code class="language-python">person = {
+    'first_name': 'Shiva',
+    'country': 'Finland',
+    'skills': ['JavaScript', 'Python']
+}
+
+# Using square brackets
+print(person['first_name'])  # Shiva
+print(person['skills'][0])   # JavaScript
+
+# Using get() method (safer - returns None if key doesn't exist)
+print(person.get('first_name'))  # Shiva
+print(person.get('city'))        # None (no error)</code></pre>
+            </div>
+
+            <div class="subsection-title">Adding & Modifying Items</div>
+            <p class="content-text">
+                You can add new key-value pairs or modify existing ones by assigning a value to a key.
+            </p>
+
+            <div class="code-example">
+                <pre><code class="language-python">person = {'first_name': 'Shiva', 'age': 250}
+
+# Adding new items
+person['job_title'] = 'Instructor'
+person['city'] = 'Helsinki'
+
+# Modifying existing items
+person['age'] = 252
+
+print(person)
+# {'first_name': 'Shiva', 'age': 252, 'job_title': 'Instructor', 'city': 'Helsinki'}</code></pre>
+            </div>
+
+            <div class="subsection-title">Checking Keys</div>
+            <p class="content-text">
+                Use the <code>in</code> operator to check if a key exists in a dictionary.
+            </p>
+
+            <div class="code-example">
+                <pre><code class="language-python">person = {'name': 'Shiva', 'age': 25}
+
+print('name' in person)   # True
+print('city' in person)   # False</code></pre>
+            </div>
+
+            <div class="subsection-title">Removing Items</div>
+            <p class="content-text">
+                Remove items using <code>pop()</code>, <code>popitem()</code>, or <code>del</code>.
+            </p>
+
+            <div class="code-example">
+                <pre><code class="language-python">person = {'first_name': 'Shiva', 'last_name': 'Konam', 'age': 250}
+
+# pop(key) - removes specific key
+person.pop('age')
+
+# popitem() - removes last inserted item
+person.popitem()
+
+# del - removes specific key
+del person['first_name']</code></pre>
+            </div>
+
+            <div class="subsection-title">Dictionary Methods</div>
+            <p class="content-text">
+                Useful dictionary methods for working with keys, values, and items.
+            </p>
+
+            <div class="code-example">
+                <pre><code class="language-python">person = {'name': 'Shiva', 'age': 25, 'city': 'Helsinki'}
+
+# Get all keys
+keys = person.keys()
+print(keys)  # dict_keys(['name', 'age', 'city'])
+
+# Get all values
+values = person.values()
+print(values)  # dict_values(['Shiva', 25, 'Helsinki'])
+
+# Get all items as tuples
+items = person.items()
+print(items)  # dict_items([('name', 'Shiva'), ('age', 25), ('city', 'Helsinki')])
+
+# Copy a dictionary
+person_copy = person.copy()
+
+# Clear all items
+person.clear()
+print(person)  # {}</code></pre>
+            </div>
+
+            <div class="section-title">💪 Practice Exercises</div>
+
+            <!-- Exercise 1 -->
+            <div class="exercise-section" id="exercise-1">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 1: Create a dog dictionary</div>
+                    <div class="exercise-status pending" id="status-1">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Create a dictionary called <code>dog</code> and add these keys: name, color, breed, legs, age</p>
+                <p><strong>Expected Output:</strong> A dictionary with all 5 keys and appropriate values</p>
+                <textarea class="code-editor" id="code-1" placeholder="Write your code here...">dog = {}
+# Add your keys and values here
+print(dog)</textarea>
+                <button class="hint-btn" onclick="toggleHint(1)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-1">Example: dog = {'name': 'Buddy', 'color': 'brown', ...}</div>
+                <button class="verify-btn" onclick="verifyExercise(1)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-1"></div>
+            </div>
+
+            <!-- Exercise 2 -->
+            <div class="exercise-section" id="exercise-2">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 2: Create a student dictionary</div>
+                    <div class="exercise-status pending" id="status-2">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Create a <code>student</code> dictionary with keys: first_name, last_name, age, country, skills (as a list)</p>
+                <p><strong>Expected Output:</strong> Dictionary with at least these 5 keys</p>
+                <textarea class="code-editor" id="code-2" placeholder="Write your code here...">student = {}
+# Add your student information
+print(student)</textarea>
+                <button class="hint-btn" onclick="toggleHint(2)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-2">student = {'first_name': 'John', 'skills': ['Python', 'JavaScript'], ...}</div>
+                <button class="verify-btn" onclick="verifyExercise(2)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-2"></div>
+            </div>
+
+            <!-- Exercise 3 -->
+            <div class="exercise-section" id="exercise-3">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 3: Dictionary length and skills</div>
+                    <div class="exercise-status pending" id="status-3">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Create a student dict, print its length, get the 'skills' value and check its type (should be list)</p>
+                <p><strong>Expected Output:</strong> Length, skills list, and type showing &lt;class 'list'&gt;</p>
+                <textarea class="code-editor" id="code-3" placeholder="Write your code here...">student = {'name': 'John', 'skills': ['Python']}
+# Print length, skills, and type of skills</textarea>
+                <button class="hint-btn" onclick="toggleHint(3)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-3">Use len(student), student['skills'], and type(student['skills'])</div>
+                <button class="verify-btn" onclick="verifyExercise(3)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-3"></div>
+            </div>
+
+            <!-- Exercise 4 -->
+            <div class="exercise-section" id="exercise-4">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 4: Get keys and values</div>
+                    <div class="exercise-status pending" id="status-4">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Create a dictionary, then get and print its keys and values as lists</p>
+                <p><strong>Expected Output:</strong> Keys list and values list printed separately</p>
+                <textarea class="code-editor" id="code-4" placeholder="Write your code here...">person = {'name': 'Shiva', 'age': 25}
+# Get keys and values</textarea>
+                <button class="hint-btn" onclick="toggleHint(4)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-4">Use person.keys() and person.values()</div>
+                <button class="verify-btn" onclick="verifyExercise(4)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-4"></div>
+            </div>
+
+            <!-- Exercise 5 -->
+            <div class="exercise-section" id="exercise-5">
+                <div class="exercise-header">
+                    <div class="exercise-title">Exercise 5: Convert to tuples and delete item</div>
+                    <div class="exercise-status pending" id="status-5">Pending</div>
+                </div>
+                <p><strong>Task:</strong> Create a dictionary, convert it to list of tuples using <code>items()</code>, then delete one key</p>
+                <p><strong>Expected Output:</strong> List of tuples, then modified dictionary</p>
+                <textarea class="code-editor" id="code-5" placeholder="Write your code here...">person = {'name': 'Shiva', 'age': 25, 'city': 'Helsinki'}
+# Convert to tuples and delete a key</textarea>
+                <button class="hint-btn" onclick="toggleHint(5)">💡 Get Hint</button>
+                <div class="hint-text" id="hint-5">Use person.items() to get tuples, then del person['key'] to remove</div>
+                <button class="verify-btn" onclick="verifyExercise(5)">✓ Verify Answer</button>
+                <div class="feedback-message" id="feedback-5"></div>
+            </div>
+
+            <div class="day-navigation">
+                <button class="nav-btn prev" onclick="goToPreviousDay()">← Previous Day</button>
+                <button class="nav-btn next" onclick="goToNextDay()">Next Day →</button>
+            </div>
+        </div>
+
+        <div class="executor-sidebar">
+            <div class="executor-title">🐍 Python Playground</div>
+            <p style="color:#666; margin-bottom:1rem;">Test your dictionary code here!</p>
+            <textarea class="code-editor" id="playground-code"># Try your own code here..
+            </textarea>
+            <div class="executor-buttons">
+                <button class="btn btn-run" onclick="runPlayground()">▶ Run</button>
+                <button class="btn btn-clear" onclick="clearPlayground()">🗑 Clear</button>
+            </div>
+            <div class="output-container" id="playground-output">Click "Run" to execute code...</div>
+            <div class="info-box"><strong>💡 Tip:</strong> Dictionaries maintain insertion order in Python 3.7+</div>
+        </div>
+    </div>
+
+    <div class="modal" id="completion-modal">
+        <div class="modal-content">
+            <h2>⚠️ Complete Today's Exercises</h2>
+            <p>You need to complete all exercises before moving to the next day!</p>
+            <p><strong id="remaining-exercises"></strong></p>
+            <button class="modal-btn" onclick="closeModal()">Got it!</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script>
+        let completedExercises = new Set(JSON.parse(localStorage.getItem('day8-completed') || '[]'));
+        let streak = parseInt(localStorage.getItem('streak') || '0');
+        document.getElementById('streak-count').textContent = streak;
+        updateProgress();
+        checkCompletedExercises();
+        document.querySelectorAll('.btn-run, .verify-btn').forEach(b => b.disabled = true);
+
+        document.addEventListener('DOMContentLoaded', function () { loadPyodideRuntime().catch(err => { console.error('Failed to load Pyodide:', err); document.getElementById('playground-output').textContent = 'Failed to load Python interpreter — using fallback.'; }); });
+
+        let pyodide = null; let pyodideReady = false;
+        async function loadPyodideRuntime() { if (!window.loadPyodide) { const s = document.createElement('script'); s.src = "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js"; document.head.appendChild(s); await new Promise(resolve => s.onload = resolve); } pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.23.4/full/' }); pyodideReady = true; document.querySelectorAll('.btn-run, .verify-btn').forEach(b => b.disabled = false); document.getElementById('playground-output').textContent = 'Python interpreter ready — click Run'; }
+
+        function runPythonFallback(code) { try { let output = []; const context = { print: (...args) => { output.push(args.map(arg => { try { return JSON.stringify(arg); } catch (e) { return String(arg); } }).join(' ')); }, True: true, False: false, None: null, len: (obj) => obj.length || Object.keys(obj).length }; let jsCode = code.split('\n').map(line => { const ci = line.indexOf('#'); if (ci !== -1) { const before = line.substring(0, ci); const sq = (before.match(/'/g) || []).length; const dq = (before.match(/"/g) || []).length; if (sq % 2 === 0 && dq % 2 === 0) return line.substring(0, ci).trim(); } return line; }).join('\n').replace(/print\((.*?)\)/g, 'context.print($1)'); const func = new Function('context', jsCode); func(context); return { success: true, output: output.join('\n') || '(No output)' } } catch (error) { return { success: false, output: 'Error: ' + error.message }; } }
+
+        async function runPython(code) { if (pyodideReady && pyodide) { try { const wrapper = `import sys, io\n_io = io.StringIO()\nold = sys.stdout\nsys.stdout = _io\ntry:\n` + code.split('\n').map(l => '    ' + l).join('\n') + `\nfinally:\n    sys.stdout = old\n_output = _io.getvalue()`; await pyodide.runPythonAsync(wrapper); const out = pyodide.globals.get('_output'); const outStr = out === undefined || out === null ? '(No output)' : String(out); return { success: true, output: outStr.trim() || '(No output)' }; } catch (err) { return { success: false, output: 'Error: ' + (err.message || err) }; } } else { return runPythonFallback(code); } }
+
+        async function runPlayground() { const code = document.getElementById('playground-code').value; const outputEl = document.getElementById('playground-output'); outputEl.textContent = 'Running...'; outputEl.className = 'output-container'; const result = await runPython(code); outputEl.textContent = result.output; if (!result.success) outputEl.classList.add('error'); }
+        function clearPlayground() { document.getElementById('playground-output').textContent = 'Output cleared. Run code to see results...'; document.getElementById('playground-output').className = 'output-container'; }
+        function toggleHint(ex) { const hintEl = document.getElementById(`hint-${ex}`); const btnEl = event.target; hintEl.classList.toggle('show'); btnEl.textContent = hintEl.classList.contains('show') ? '💡 Hide Hint' : '💡 Get Hint'; }
+
+        async function verifyExercise(ex) {
+            const code = document.getElementById(`code-${ex}`).value;
+            const feedbackEl = document.getElementById(`feedback-${ex}`);
+            const statusEl = document.getElementById(`status-${ex}`);
+            
+            if (!code.trim()) {
+                feedbackEl.textContent = '❌ Please write some code first!';
+                feedbackEl.className = 'feedback-message error';
+                return;
+            }
+            
+            const result = await runPython(code);
+            const output = (result.output || '').trim();
+            let isCorrect = false;
+
+            if (ex === 1) {
+                // Check for dog dictionary with 5 keys
+                isCorrect = result.success && 
+                           code.includes('dog') && 
+                           /name|color|breed|legs|age/.test(code) &&
+                           output.includes('{');
+            } else if (ex === 2) {
+                // Check for student dictionary with required keys
+                isCorrect = result.success && 
+                           code.includes('student') && 
+                           /first_name|last_name|age|country|skills/.test(code) &&
+                           output.includes('{');
+            } else if (ex === 3) {
+                // Check for length, skills, and type
+                isCorrect = result.success && 
+                           /len|length|\d+/.test(output) && 
+                           (/list|List/.test(output) || /\[/.test(output));
+            } else if (ex === 4) {
+                // Check for keys() and values()
+                isCorrect = result.success && 
+                           (code.includes('.keys()') || code.includes('.values()')) &&
+                           (output.includes('dict_keys') || output.includes('dict_values') || 
+                            /\[/.test(output));
+            } else if (ex === 5) {
+                // Check for items() and del
+                isCorrect = result.success && 
+                           (code.includes('.items()') || code.includes('del ')) &&
+                           output.length > 5;
+            }
+
+            if (isCorrect) {
+                feedbackEl.textContent = '✅ Correct! Great job!';
+                feedbackEl.className = 'feedback-message success';
+                statusEl.textContent = 'Completed';
+                statusEl.className = 'exercise-status completed';
+                
+                if (!completedExercises.has(ex)) {
+                    completedExercises.add(ex);
+                    saveProgress();
+                    updateProgress();
+                    
+                    if (completedExercises.size === 5) {
+                        setTimeout(celebrateCompletion, 500);
+                    }
+                }
+            } else {
+                feedbackEl.textContent = `❌ Not quite right. Check the task requirements and try again!`;
+                feedbackEl.className = 'feedback-message error';
+            }
+        }
+
+        function updateProgress() {
+            const completed = completedExercises.size;
+            const total = 5;
+            const percentage = (completed / total) * 100;
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-bar').textContent = Math.round(percentage) + '%';
+            document.getElementById('progress-text').textContent = `${completed} of ${total} exercises completed`;
+        }
+
+        function checkCompletedExercises() {
+            completedExercises.forEach(num => {
+                const s = document.getElementById(`status-${num}`);
+                if (s) {
+                    s.textContent = 'Completed';
+                    s.className = 'exercise-status completed';
+                }
+            });
+        }
+
+        function saveProgress() {
+            localStorage.setItem('day8-completed', JSON.stringify([...completedExercises]));
+        }
+
+        function celebrateCompletion() {
+            if (!localStorage.getItem('day8-finished')) {
+                streak++;
+                localStorage.setItem('streak', streak);
+                localStorage.setItem('day8-finished', 'true');
+                document.getElementById('streak-count').textContent = streak;
+            }
+            alert('🎉 Congratulations! You completed Day 8!\n\nYou\'ve mastered Python dictionaries!\n' + `Current streak: ${streak} day${streak > 1 ? 's' : ''}!`);
+        }
+
+        function goToNextDay() {
+            if (completedExercises.size < 5) {
+                const remaining = 5 - completedExercises.size;
+                document.getElementById('remaining-exercises').textContent = `You have ${remaining} exercise${remaining > 1 ? 's' : ''} left to complete.`;
+                document.getElementById('completion-modal').classList.add('show');
+            } else {
+                window.location.href = 'day-9.html';
+            }
+        }
+
+        function goToPreviousDay() {
+            window.location.href = 'day-7.html';
+        }
+
+        function closeModal() {
+            document.getElementById('completion-modal').classList.remove('show');
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                const active = document.activeElement;
+                if (active.id === 'playground-code') {
+                    runPlayground();
+                    e.preventDefault();
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            Prism.highlightAll();
+        });
+    </script>
 </body>
+
 </html>
